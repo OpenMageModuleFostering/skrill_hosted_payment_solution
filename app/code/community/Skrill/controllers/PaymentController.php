@@ -142,16 +142,15 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
 
         $this->saveAdditionalInformation($order, $responseStatus);
 
-        $isFraud = $this->isFraud($order, $responseStatus);
-        $isFraudLog = ($isFraud) ? 'true' : 'false';
-        Mage::log('is Fraud : '.$isFraudLog, null, 'skrill_log_file.log');
+        $isFraud = $this->isFraud($responseStatus);
+        Mage::log('is Fraud : '.(int)$isFraud, null, 'skrill_log_file.log');
+        
+        $generatedSignaturedByOrder = $this->generateMd5sigByOrder($order, $responseStatus);
+        $isCredentialValid = $this->isPaymentSignatureEqualsGeneratedSignature($responseStatus['md5sig'], $generatedSignaturedByOrder);
+     
+        Mage::log('is credential valid : '.(int)$isCredentialValid, null, 'skrill_log_file.log');
 
-        if ($isFraud) {
-            $this->processFraud($order, $responseStatus);
-        } else {
-            $this->processPayment($order, $responseStatus);
-        }
-
+        $this->processPayment($order, $responseStatus, $isFraud, $isCredentialValid);
     }
 
     protected function getResponseStatus()
@@ -196,15 +195,30 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
         return number_format($number, 2, '.', '');
     }
 
-    protected function isFraud($order, $responseStatus)
+    protected function isFraud($responseStatus)
     {
-        return !($responseStatus['md5sig'] == $this->generateMd5sig($order, $responseStatus));
+        return !strtoupper(md5($responseStatus['transaction_id'].$responseStatus['amount'])) == $responseStatus['paymentkey'];
     }
 
-    protected function generateMd5sig($order, $response)
+    /**
+     * check is payment signature equals with value that already generated using order parameters
+     *
+     * @return boolean
+     */
+    protected function isPaymentSignatureEqualsGeneratedSignature($paymentSignature, $generatedSignature)
     {
-        $string = Mage::getStoreConfig('payment/skrill_settings/merchant_id', $order->getStoreId()).$response['transaction_id'].strtoupper(Mage::getStoreConfig('payment/skrill_settings/secret_word', $order->getStoreId())).$response['mb_amount'].$response['mb_currency'].$response['status'];
+        return $paymentSignature == $generatedSignature;
+    }
 
+    protected function generateMd5sigByOrder($order, $response)
+    {
+        $string = Mage::getStoreConfig('payment/skrill_settings/merchant_id', $order->getStoreId()).
+                $response['transaction_id'].
+                strtoupper(Mage::getStoreConfig('payment/skrill_settings/secret_word', $order->getStoreId())).
+                $response['mb_amount'].
+                $response['mb_currency'].
+                $response['status'];
+        
         return strtoupper(md5($string));
     }
 
@@ -240,12 +254,12 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
 
         $comment = Mage::helper('skrill')->getComment($responseStatus,"history","fraud");
         $order->cancel();
-        $order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, 'fraud')->save();
+        $order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, Mage_Sales_Model_Order::STATUS_FRAUD)->save();
         $order->addStatusHistoryComment($comment, false);
         $order->save();
     }
 
-    protected function processPayment($order, $responseStatus)
+    protected function processPayment($order, $responseStatus, $isFraud, $isCredentialValid)
     {
         Mage::log('process payment', null, 'skrill_log_file.log');
 
@@ -258,8 +272,18 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
         } elseif ($responseStatus['status'] == Skrill_Model_Method_Skrill::PROCESSED_STATUS) {
             $order->sendNewOrderEmail();
             Mage::helper('skrill')->invoice($order);
-            $comment = Mage::helper('skrill')->getComment($responseStatus);
-            $order->addStatusHistoryComment($comment, 'payment_accepted')->save();
+            if($isFraud) {
+                $comment = Mage::helper('skrill')->getComment($responseStatus,"history","fraud");
+                $order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, Mage_Sales_Model_Order::STATUS_FRAUD)->save();
+                $order->addStatusHistoryComment($comment, Mage_Sales_Model_Order::STATUS_FRAUD)->save();
+            } elseif(!$isCredentialValid) {
+                $comment = Mage::helper('skrill')->getComment($responseStatus,"history","invalid credential");
+                $order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, 'invalid_credential')->save();
+                $order->addStatusHistoryComment($comment, Mage_Sales_Model_Order::STATE_PROCESSING)->save();
+            } else{
+                $comment = Mage::helper('skrill')->getComment($responseStatus);
+                $order->addStatusHistoryComment($comment, 'payment_accepted')->save();
+            }
             $this->inActiveQuote($order);
         } else {
             if ($responseStatus['failed_reason_code']) {

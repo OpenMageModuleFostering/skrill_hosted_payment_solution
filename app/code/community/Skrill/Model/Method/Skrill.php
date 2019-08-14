@@ -235,7 +235,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
 
     public function getPaymentMethods()
     {
-        $payment_methods = "WLT,PSC,ACC,VSA,MSC,VSD,VSE,MAE,AMX,DIN,JCB,GCB,DNK,PSP,CSI,OBT,GIR,DID,SFT,EBT,IDL,NPY,PLI,PWY,EPY,GLU,ALI,NTL";
+        $payment_methods = "WLT,PSC,ACC,VSA,MSC,VSD,VSE,MAE,AMX,DIN,JCB,GCB,DNK,PSP,CSI,OBT,GIR,DID,SFT,EBT,IDL,NPY,PLI,PWY,EPY,GLU,ALI,NTL,ADB,AOB,ACI,AUP";
         $pm_list = explode(",", $payment_methods);
         $list = '';
         foreach ($pm_list as $key => $pm) {
@@ -260,7 +260,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         return $statusUrl;
     }
 
-    protected function getRefundStatusUrl($orderId)
+    public function getRefundStatusUrl($orderId)
     {
         $refundStatusUrl = Mage::getUrl(
             'skrill/payment/handleRefundStatusResponse/',
@@ -317,8 +317,10 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         $postParameters['amount'] = $basket['baseAmount'];
         $postParameters['currency'] = $basket['baseCurrency'];
         $postParameters['detail1_description'] = "Order pay from ".$contact['email'];
-        $postParameters['merchant_fields'] = 'Platform';
+        $postParameters['merchant_fields'] = 'Platform,Paymentkey';
         $postParameters['Platform'] = '71422537';
+        $postParameters['Paymentkey'] =
+            $this->generatePaymentKey($postParameters['transaction_id'], $postParameters['amount']);
 
         if ($this->_code != "skrill_flexible")
             $postParameters['payment_methods'] = $this->getAccountBrand();
@@ -356,7 +358,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         return $lang;
     }
 
-    public function capture(Varien_Object $payment, $amount)
+    public function capture(Varien_Object $payment)
     {
         $payment->setStatus('APPROVED')
                 ->setTransactionId($payment->getAdditionalInformation('skrill_mb_transaction_id'))
@@ -443,5 +445,9 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         return Mage::helper('skrill')->__($this->_methodTitle);
     }
 
+    protected function generatePaymentKey($transactionId, $amount)
+    {
+        return strtoupper(md5($transactionId.$amount));
+    }
 }
 

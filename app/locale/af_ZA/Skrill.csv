@@ -162,6 +162,7 @@
 
 "SUCCESS_PAYMENT_ACC", "Payment Accepted"
 "SUCCESS_PREAUTH_ACC", "Pre-Authorization of Payment"
+"INVALID_CREDENTIAL", "Invalid Credential"
 
 "ERROR_CC_ACCOUNT", "The account holder entered does not match your name. Please use an account that is registered on your name."
 "ERROR_CC_INVALIDDATA", "Unfortunately, the card/account data you entered was not correct. Please try again."
@@ -262,3 +263,15 @@
 "BACKEND_TT_AMOUNT", "Amount"
 "SUCCESS_GENERAL_UPDATE_PAYMENT", "The payment status has been successfully updated."
 "ERROR_UPDATE_BACKEND", "Order status can not be updated"
+
+"SKRILL_BACKEND_PM_ADB", "Direct Bank Transfer"
+"SKRILL_BACKEND_PM_AOB", "Manual Bank Transfer"
+"SKRILL_BACKEND_PM_ACI", "Cash/invoice"
+"SKRILL_BACKEND_PM_AUP", "Unionpay"
+"SKRILL_BACKEND_BT_STATUS", "Update Statu"
+
+"SKRILL_FRONTEND_PM_ADB", "Direct Bank Transfer"
+"SKRILL_FRONTEND_PM_AOB", "Manual Bank Transfer"
+"SKRILL_FRONTEND_PM_ACI", "Cash/invoice"
+"SKRILL_FRONTEND_PM_AUP", "Unionpay"
+"SKRILL_FRONTEND_SUPPORTED_BANK", "Supported Banks"

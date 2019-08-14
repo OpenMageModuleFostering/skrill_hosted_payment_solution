@@ -1,0 +1,124 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2016 skrill
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+<?php
+$_method = $this->getMethod();
+$_code = $_method->getCode();
+$disabledPaymentError = $_method->getDisabledPaymentError();
+?>
+<link href="<?php echo $this->getSkinUrl('css/skrill/formbank.css')?>" rel="stylesheet" type="text/css">
+
+<ul class="form-list" id="payment_form_<?php echo $_code ?>" style="display:none">
+    <li>
+        <?php if ($disabledPaymentError) { ?>
+            <div class="additional">
+                <script>
+                    var disabledPaymentMethod = '<?php echo $_code ?>';
+                    if (payment.currentMethod == disabledPaymentMethod) {
+                        payment.currentMethod = '';
+                    }
+                    var payment_form = document.getElementById('payment_form_<?php echo $_code ?>');
+                    payment_form.style.display = 'block';
+                    payment_form.style.background = '#f4f4f4';
+                    var p_method = document.getElementById('p_method_<?php echo $_code ?>');
+                    p_method.disabled = true;
+                    p_method.checked = false;
+                </script>
+                <?php foreach ($disabledPaymentError as $value) : ?>
+                    <p><?php echo $value; ?></p>
+                <?php endforeach; ?>
+            <?php } else { ?>
+                <div>
+                <?php } ?>
+
+
+                <?php if ($_code == 'skrill_adb') { ?>
+                    <p>
+                    <div><?php Mage::helper('skrill')->__('SKRILL_FRONTEND_SUPPORTED_BANK'); ?></div>
+                    </p>
+                    <p class="supported_bank">
+                        <?php
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/santander-rio.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/itau.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/banco-do-brasil.png') ."' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/bradesco.png') . "' height='35px'  />";
+
+                        ?>
+                    </p>
+
+                <?php } ?>
+
+
+                <?php if ($_code == 'skrill_aci') { ?>
+                    <p>
+                    <div><?php Mage::helper('skrill')->__('SKRILL_FRONTEND_SUPPORTED_BANK'); ?></div>
+                    </p>
+                    <p class="supported_bank">
+                        <?php
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/red-link.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/pago-facil.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/boleto-bancario.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/servi-pag.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/efecty.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/davivienda.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/exito.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/banco-de-occidente.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/carulla.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/edeq.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/surtimax.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/oxxo.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/bbva.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/banamex.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/santander.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/red-pagos.png') . "' height='35px'  />";
+                        
+
+                        ?>
+                    </p>
+
+                <?php } ?>
+
+
+                <?php if ($_code == 'skrill_aob') { ?>
+                    <p>
+                    <div><?php Mage::helper('skrill')->__('SKRILL_FRONTEND_SUPPORTED_BANK'); ?></div>
+                    </p>
+                    <p class="supported_bank">
+                        <?php
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/hsbc.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/caixa.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/santander.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/webpay.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/boleto-bancario.png') . "' height='35px'  />";
+                        echo "<img src='" . $this->getSkinUrl('images/skrill/bank/pse.png') . "' height='35px'  />";
+                        ?>
+                    </p>
+
+                <?php } ?>
+
+            </div>
+    </li>
+</ul>

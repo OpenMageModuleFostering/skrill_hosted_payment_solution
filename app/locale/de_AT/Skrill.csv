@@ -262,3 +262,16 @@
 "BACKEND_TT_AMOUNT", "Betrag"
 "SUCCESS_GENERAL_UPDATE_PAYMENT", "Der Status der Transaktion wurde erfolgreich aktualisiert."
 "ERROR_UPDATE_BACKEND", "Der Status kann nicht aktualisiert werden."
+
+"SKRILL_BACKEND_PM_ADB", "Direct Bank Transfer"
+"SKRILL_BACKEND_PM_AOB", "Manual Bank Transfer"
+"SKRILL_BACKEND_PM_ACI", "Cash/invoice"
+"SKRILL_BACKEND_PM_AUP", "Unionpay"
+"SKRILL_BACKEND_BT_STATUS", "Update Statu"
+
+
+"SKRILL_FRONTEND_PM_ADB", "Direct Bank Transfer"
+"SKRILL_FRONTEND_PM_AOB", "Manual Bank Transfer"
+"SKRILL_FRONTEND_PM_ACI", "Cash/invoice"
+"SKRILL_FRONTEND_PM_AUP", "Unionpay"
+"SKRILL_FRONTEND_SUPPORTED_BANK", "Supported Banks"

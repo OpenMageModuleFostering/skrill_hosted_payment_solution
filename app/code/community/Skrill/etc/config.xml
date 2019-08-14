@@ -22,7 +22,7 @@
 <config>
     <modules>
         <Skrill>
-            <version>1.0.27</version>
+            <version>1.0.28</version>
         </Skrill>
     </modules>
 
@@ -59,6 +59,9 @@
                     <payment_remotely translate="label">
                         <label>SUCCESS_PREAUTH_ACC</label>
                     </payment_remotely>
+                    <invalid_credential translate="label">
+                        <label>INVALID_CREDENTIAL</label>
+                    </invalid_credential>
                 </statuses>
 				<states>
 					<pending_payment>
@@ -71,6 +74,11 @@
 							<payment_accepted/>
 						</statuses>
 					</processing>
+                   <processing>
+                        <statuses>
+                            <invalid_credential/>
+                        </statuses>
+                   </processing>
 				</states>
             </order>
         </sales>
@@ -178,7 +186,7 @@
     <default>
         <payment>
             <skrill_settings>
-                <version>1.0.27</version>
+                <version>1.0.28</version>
                 <merchant_id></merchant_id>
                 <merchant_account></merchant_account>
                 <recipient_desc></recipient_desc>
@@ -372,9 +380,9 @@
                 <model>skrill/method_obt</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
-                <title>Skrill Direct (Online Bank Transfer)</title>
+                <title>Rapid Transfer</title>
                 <allowspecific>1</allowspecific>
-                <specificcountry>DE,GB,FR,IT,ES,HU,AT</specificcountry>
+                <specificcountry>DE,GB,FR,IT,ES,HU,AT,PT</specificcountry>
                 <group>skrillpm</group>
             </skrill_obt>
             <skrill_ntl>
@@ -665,6 +673,50 @@
                 <password></password>
                 <group>skrillpm</group>
             </skrill_yandex> -->
+            <skrill_adb>
+                <active>0</active>
+                <show_separately>0</show_separately>
+                <model>skrill/method_adb</model>
+                <order_status>pending_payment</order_status>
+                <payment_action>authorize</payment_action>
+                <title>Trustly</title>
+                <allowspecific>1</allowspecific>
+                <specificcountry>AR,BR,CN</specificcountry>
+                <group>skrillpm</group>
+            </skrill_adb>
+            <skrill_aob>
+                <active>0</active>
+                <show_separately>0</show_separately>
+                <model>skrill/method_aob</model>
+                <order_status>pending_payment</order_status>
+                <payment_action>authorize</payment_action>
+                <title>Trustly</title>
+                <allowspecific>1</allowspecific>
+                <specificcountry>BR,CL,CO</specificcountry>
+                <group>skrillpm</group>
+            </skrill_aob>
+            <skrill_aci>
+                <active>0</active>
+                <show_separately>0</show_separately>
+                <model>skrill/method_aci</model>
+                <order_status>pending_payment</order_status>
+                <payment_action>authorize</payment_action>
+                <title>Trustly</title>
+                <allowspecific>1</allowspecific>
+                <specificcountry>AR,BR,CL,CO,MX,UY</specificcountry>
+                <group>skrillpm</group>
+            </skrill_aci>
+            <skrill_aup>
+                <active>0</active>
+                <show_separately>0</show_separately>
+                <model>skrill/method_aup</model>
+                <order_status>pending_payment</order_status>
+                <payment_action>authorize</payment_action>
+                <title>Trustly</title>
+                <allowspecific>1</allowspecific>
+                <specificcountry>CN</specificcountry>
+                <group>skrillpm</group>
+            </skrill_aup>
         </payment>
     </default>
 

@@ -232,7 +232,6 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
         $dataTransaction['payment_type'] = $this->getPaymentType();
         $dataTransaction['transId'] = $this->getOrderIncrementId().Mage::helper('skrill')->getDateTime().Mage::helper('skrill')->randomNumber(4);
         Mage::getSingleton('customer/session')->setDataTransaction($dataTransaction);
-
         $postData = Mage::helper('skrill')->getPostParameter($dataCust,$dataTransaction);
 
         $url = Mage::helper('skrill')->getTokenUrl($server);
@@ -373,7 +372,6 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
         $dataTransaction['currency'] = $order_currency;
         $dataTransaction['payment_method'] = $this->_methodCode;
         $dataTransaction['payment_type'] = "RF";
-
         $postData = Mage::helper('skrill')->getPostExecutePayment($dataTransaction);
 
         $server = $this->getServerMode();
@@ -468,6 +466,5 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
                 break;
         }
     }
-
 }
 

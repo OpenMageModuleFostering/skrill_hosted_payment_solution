@@ -138,4 +138,15 @@ a.btnCustom  {
 	top:-10px;
 	right:-10px;
 }
+.supported_bank{
+	display: block !important;
+        width: 100%;
+        
+}
+
+.supported_bank img{
+	margin: 0 3px !important;
+        display: inline-block !important;
+        padding-left : 23px;
+}
 #header { z-index:1;}
