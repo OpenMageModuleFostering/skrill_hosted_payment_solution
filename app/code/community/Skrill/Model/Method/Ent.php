@@ -18,7 +18,7 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-class Skrill_Model_Method_Aob extends Skrill_Model_Method_Skrill
+class Skrill_Model_Method_Ent extends Skrill_Model_Method_Skrill
 {
 
     /**
@@ -26,26 +26,26 @@ class Skrill_Model_Method_Aob extends Skrill_Model_Method_Skrill
      *
      * @var string
      */
-    protected $_formBlockType = 'skrill/payment_form_aob';
+    protected $_formBlockType = 'skrill/payment_form_ent';
 
     /**
      * Magento method code
      *
      * @var string
      */
-    protected $_code = 'skrill_aob';
+    protected $_code = 'skrill_ent';
 
     /**
      *
      * @var string
      */
-    protected $_accountBrand = 'AOB';
+    protected $_accountBrand = 'ENT';
 
     /**
      * Payment Title
      *
      * @var type
      */
-    protected $_methodTitle = 'SKRILL_FRONTEND_PM_AOB';
+    protected $_methodTitle = 'SKRILL_FRONTEND_PM_ENT';
     
 }

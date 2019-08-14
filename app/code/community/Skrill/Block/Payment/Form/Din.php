@@ -26,7 +26,7 @@ class Skrill_Block_Payment_Form_Din extends Skrill_Block_Payment_Form_Abstract
     protected function _construct()
     {
         $this->_logoAlt = Mage::helper('skrill')->__('SKRILL_FRONTEND_PM_DIN');
-        $this->_logoUrl = "https://www.skrill.com/fileadmin/content/images/brand_centre/Payment_Options/dinersclub.gif";        
+        $this->_logoUrl = "https://www.skrill.com/fileadmin/content/images/brand_centre/Payment_Options/dinersclub.gif";
         parent::_construct();
     }
 

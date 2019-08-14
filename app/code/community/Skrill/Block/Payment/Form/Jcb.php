@@ -26,7 +26,7 @@ class Skrill_Block_Payment_Form_Jcb extends Skrill_Block_Payment_Form_Abstract
     protected function _construct()
     {
         $this->_logoAlt = Mage::helper('skrill')->__('SKRILL_FRONTEND_PM_JCB');
-        $this->_logoUrl = "https://www.skrill.com/fileadmin/content/images/brand_centre/Payment_Options/jcb.gif";        
+        $this->_logoUrl = "https://www.skrill.com/fileadmin/content/images/brand_centre/Payment_Options/jcb.gif";
         parent::_construct();
     }
 

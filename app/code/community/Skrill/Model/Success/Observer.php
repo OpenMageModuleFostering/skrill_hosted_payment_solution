@@ -22,21 +22,17 @@
  * Order success observer
  *
  */
-class Skrill_Model_Success_Observer
+class Skrill_Model_Success_Observer 
 {
+    
     /**
      * Reactivate the cart because the order isn't finished
-     *
-     * @param Varien_Event_Observer $observer
+     * 
+     * @param Varien_Event_Observer $observer 
      */
     public function activateQuote(Varien_Event_Observer $observer)
     {
-    	$quote = $observer->getEvent()->getQuote();
-        $paymentMethod = $quote->getPayment()->getMethod();
-
-        if (strpos($paymentMethod, 'skrill') !== false) {
-        	$quote->setIsActive(true)->save();
-        }
+        $observer->getEvent()->getQuote()->setIsActive(true)->save();
     }
 }
 

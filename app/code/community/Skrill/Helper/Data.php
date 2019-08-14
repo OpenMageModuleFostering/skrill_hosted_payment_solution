@@ -38,11 +38,7 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
     protected $jsUrlLive = 'https://ctpe.net/frontend/widget/v3/widget.js?style=card&version=beautified&language=';
     protected $jsUrlTest = 'https://test.ctpe.net/frontend/widget/v3/widget.js?style=card&version=beautified&language=';
 
-    protected $skrillPaymentUrl = 'https://pay.skrill.com';
-    protected $skrillQueryUrl = 'https://www.skrill.com/app/query.pl';
-    protected $skrillRefundUrl = 'https://www.skrill.com/app/refund.pl';
-
-    public function getErrorIdentifier($code)
+    public function getErrorIdentifier($code) 
     {
         $error_messages = array(
             "40.10" => "ERROR_CC_DECLINED_CARD",
@@ -159,7 +155,7 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
             "800.100.153" => "ERROR_CC_INVALIDCVV",
             "100.100.601" => "ERROR_CC_INVALIDCVV",
             "100.100.600" => "ERROR_CC_INVALIDCVV",
-            "800.100.192" => "ERROR_CC_INVALIDCVV",
+            "800.100.192" => "ERROR_CC_INVALIDCVV", 
 
             "800.100.157" => "ERROR_CC_EXPIRY",
 
@@ -243,20 +239,20 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
             "800.300.102" => "ERROR_GENERAL_BLACKLIST",
             "800.300.200" => "ERROR_GENERAL_BLACKLIST",
             "800.300.301" => "ERROR_GENERAL_BLACKLIST",
-            "800.300.302" => "ERROR_GENERAL_BLACKLIST",
+            "800.300.302" => "ERROR_GENERAL_BLACKLIST", 
 
             "800.500.100" => "ERROR_GENERAL_GENERAL",
-            "800.700.100" => "ERROR_GENERAL_GENERAL",
+            "800.700.100" => "ERROR_GENERAL_GENERAL",   
 
             "000.100.203" => "ERROR_GENERAL_LIMIT_AMOUNT",
             "100.550.310" => "ERROR_GENERAL_LIMIT_AMOUNT",
             "100.550.311" => "ERROR_GENERAL_LIMIT_AMOUNT",
 
             "000.400.107" => "ERROR_GENERAL_TIMEOUT",
-            "100.395.502" => "ERROR_GENERAL_TIMEOUT",
+            "100.395.502" => "ERROR_GENERAL_TIMEOUT",   
 
             "100.395.101" => "ERROR_GIRO_NOSUPPORT",
-            "100.395.102" => "ERROR_GIRO_NOSUPPORT",
+            "100.395.102" => "ERROR_GIRO_NOSUPPORT",    
 
             "100.200.200" => "ERROR_SEPA_MANDATE",
             "000.100.204" => "ERROR_SEPA_MANDATE",
@@ -283,17 +279,17 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
             return $this->tokenUrlTest;
     }
 
-    public function getPostParameter($dataCust,$dataTransaction)
+    public function getPostParameter($dataCust,$dataTransaction) 
     {
         $data = "SECURITY.SENDER=" . $dataTransaction['sender'] .
                 "&TRANSACTION.CHANNEL=" . $dataTransaction['channel_id'] .
                 "&USER.LOGIN=" . $dataTransaction['login'] .
                 "&USER.PWD=" . $dataTransaction['password'] .
                 "&TRANSACTION.MODE=" . $dataTransaction['tx_mode'] .
-                "&IDENTIFICATION.TRANSACTIONID=" . $dataTransaction['transId'].
+                "&IDENTIFICATION.TRANSACTIONID=" . $dataTransaction['transId'].             
                 "&PAYMENT.TYPE=" . $dataTransaction['payment_type'] .
                 "&PRESENTATION.AMOUNT=" . $dataCust['amount'] .
-                "&PRESENTATION.CURRENCY=" . $dataCust['currency'] .
+                "&PRESENTATION.CURRENCY=" . $dataCust['currency'] .                 
                 "&ADDRESS.STREET=" . $dataCust['street'] .
                 "&ADDRESS.ZIP=" . $dataCust['zip'] .
                 "&ADDRESS.CITY=" . $dataCust['city'] .
@@ -301,16 +297,28 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
                 "&CONTACT.EMAIL=" . $dataCust['email'] .
                 "&NAME.GIVEN=" . $dataCust['first_name'] .
                 "&NAME.FAMILY=" . $dataCust['last_name'];
-
+            
         return $data;
-    }
-
-    public function getToken($postData, $url)
+    }   
+    
+    public function getToken($postData,$url)
     {
-        $response = Mage::helper('skrill/curl')->sendRequest($url, $postData);
+        $params = array('http' => array(
+            'method' => 'POST',
+            'header' => "Content-Type: application/x-www-form-urlencoded",
+            'content' => $postData
+        ));
+        $ctx = stream_context_create($params);
+        $fp = @fopen($url, 'rb', false, $ctx);
+        if (!$fp) {
+            throw new Exception("Problem with $url, $php_errormsg");
+        }
+        $response = @stream_get_contents($fp);
+        if ($response === false) {
+            throw new Exception("Problem reading data from $url, $php_errormsg");
+        }
 
-        $obj = json_decode($response);
-
+        $obj=json_decode($response);
         return $obj->{'transaction'}->{'token'};
     }
 
@@ -340,8 +348,21 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function executePayment($postData, $url)
     {
-        $response = Mage::helper('skrill/curl')->sendRequest($url, $postData);
+        $params = array('http' => array(
+            'method' => 'POST',
+            'header' => "Content-Type: application/x-www-form-urlencoded",
+            'content' => $postData
+        ));
 
+        $ctx = stream_context_create($params);
+        $fp = @fopen($url, 'rb', false, $ctx);
+        if (!$fp) {
+            throw new Exception("Problem with $url, $php_errormsg");
+        }
+        $response = @stream_get_contents($fp);
+        if ($response === false) {
+            throw new Exception("Problem reading data from $url, $php_errormsg");
+        }
         return $response;
     }
 
@@ -355,104 +376,116 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
         }
         return $result;
     }
-
+    
     public function getStatusUrl($server, $token){
         if ($server=="LIVE")
             return $this->statusUrlLive . $token;
         else
             return $this->statusUrlTest . $token;
     }
-
-    public function getPaymentStatus($url)
+    
+    public function checkStatusPayment($url)
     {
-        $response = Mage::helper('skrill/curl')->getResponse($url, true);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        $resultPayment = curl_exec($ch);
+        if(curl_errno($ch))
+        {
+            throw new Exception("Curl error: ". curl_error($ch));
+        }
+        curl_close($ch);
+        $resultJson = json_decode($resultPayment, true);
 
-        return $response;
+        return $resultJson;
     }
 
-    public function getPayonTrnStatus($code, $paymentType, $separatorType)
+    public function getPayonTrnStatus($code, $payment_type, $separator_type)
     {
-        if ($paymentType == 'PA') {
-            if ($code == 'ACK') {
-                $status = Mage::helper('skrill')->__('BACKEND_TT_PREAUTH');
-            } else {
-                $status = Mage::helper('skrill')->__('BACKEND_TT_PREAUTH_FAILED');
-            }
-        } elseif ($paymentType == 'CP') {
-            if ($code == 'ACK') {
-                $status = Mage::helper('skrill')->__('BACKEND_TT_CAPTURED');
-            } else {
-                if ($separatorType != 'info') {
-                    $status = Mage::helper('skrill')->__('BACKEND_TT_CAPTURED_FAILED');
-                }
-            }
-        } elseif ($paymentType == 'RF') {
-            if ($code == 'ACK') {
-                $status = Mage::helper('skrill')->__('BACKEND_TT_REFUNDED');
-            } else {
-                if ($separatorType != 'info') {
-                    $status = Mage::helper('skrill')->__('BACKEND_TT_REFUNDED_FAILED');
-                }
-            }
-        } else {
-            if ($code == 'ACK') {
-                $status = Mage::helper('skrill')->__('BACKEND_TT_ACC');
-            } else {
-                $status = Mage::helper('skrill')->__('BACKEND_TT_FAILED');
-            }
+        switch ($payment_type) {
+            case 'PA':
+                if ($code == 'ACK')
+                    $status = Mage::helper('skrill')->__('BACKEND_TT_PREAUTH');
+                else
+                    $status = Mage::helper('skrill')->__('BACKEND_TT_PREAUTH_FAILED');
+                break;
+            case 'CP':
+                if ($code == 'ACK')
+                    $status = Mage::helper('skrill')->__('BACKEND_TT_CAPTURED');
+                else
+                    if ($separator_type != 'info')
+                        $status = Mage::helper('skrill')->__('BACKEND_TT_CAPTURED_FAILED');
+                break;
+            case 'RF':
+                if ($code == 'ACK')
+                    $status = Mage::helper('skrill')->__('BACKEND_TT_REFUNDED');
+                else
+                    if ($separator_type != 'info')
+                        $status = Mage::helper('skrill')->__('BACKEND_TT_REFUNDED_FAILED');
+                break;
+            default :
+                if ($code == 'ACK')
+                    $status = Mage::helper('skrill')->__('BACKEND_TT_ACC');
+                else
+                    $status = Mage::helper('skrill')->__('BACKEND_TT_FAILED');            
         }
         return $status;
     }
 
-    protected function getpaymentMethodIdentifier($paymentBrand) {
-        if ($paymentBrand) {
-            if ($paymentBrand == 'VISA') {
-                return "SKRILL_FRONTEND_PM_VSA";
-            } elseif ($paymentBrand == 'MASTER') {
-                return "SKRILL_FRONTEND_PM_MSC";
-            } elseif ($paymentBrand == 'MAESTRO') {
-                return "SKRILL_FRONTEND_PM_MAE";
-            } elseif ($paymentBrand == 'AMEX') {
-                return "SKRILL_FRONTEND_PM_AMX";
-            } elseif ($paymentBrand == 'DIRECTDEBIT_SEPA_MIX_DE') {
-                return "FRONTEND_PM_DD";
-            } elseif ($paymentBrand == 'SOFORTUEBERWEISUNG') {
-                return "FRONTEND_PM_SOFORT";
-            } else {
-                return "FRONTEND_PM_".$paymentBrand;
-            }
-        }
-        return '';
-    }
-
-    public function getPayonComment($status, $paymentType, $paymentBrand, $bin, $separatorType, $type, $refundId, $refundStatus)
+    public function getPayonComment($status, $payment_type, $payment_brand, $bin, $separator_type, $type, $refund_id, $refund_status)
     {
-        if ( $separatorType == "info" ) {
+        if ( $separator_type == "info" )
             $separator = "<br />";
-        } else {
+        else
             $separator = ". ";
-        }
 
-        $comment = Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_STATUS')." : ".Mage::helper('skrill')->getPayonTrnStatus($status, $paymentType, $separatorType).$separator;
-
-        $paymentMethodIdentifier = $this->getpaymentMethodIdentifier($paymentBrand);
-
-        $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_PM')." : ".Mage::helper('skrill')->__($paymentMethodIdentifier).$separator;
-
-        if ($bin) {
-            $countryIso2 = Mage::helper('skrill')->getCountryIssuer($bin);
-            if ($countryIso2) {
-                $cardIssuer = Mage::app()->getLocale()->getCountryTranslation($countryIso2);
-                $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_COUNTRY')." : ".$cardIssuer.$separator;
+        $comment = Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_STATUS')." : ".Mage::helper('skrill')->getPayonTrnStatus($status, $payment_type, $separator_type).$separator;
+        if ($payment_brand)
+        {
+            switch ($payment_brand) {
+                case 'VISA':
+                    $pm = "SKRILL_FRONTEND_PM_VSA";
+                    break;
+                case 'MASTER':
+                    $pm = "SKRILL_FRONTEND_PM_MSC";
+                    break;
+                case 'MAESTRO':
+                    $pm = "SKRILL_FRONTEND_PM_MAE";
+                    break;
+                case 'AMEX':
+                    $pm = "SKRILL_FRONTEND_PM_AMX";
+                    break;
+                case 'DIRECTDEBIT_SEPA_MIX_DE':
+                    $pm = "FRONTEND_PM_DD";
+                    break;
+                case 'SOFORTUEBERWEISUNG':
+                    $pm = "FRONTEND_PM_SOFORT";
+                    break;                
+                default:
+                    $pm = "FRONTEND_PM_".$payment_brand;
+                    break;
             }
+            $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_PM')." : ".Mage::helper('skrill')->__($pm).$separator;
         }
-        if ($type == "fraud") {
+        if ($bin)
+        {
+            $country_iso2 = Mage::helper('skrill')->getCountryIssuer($bin);
+            if ($country_iso2)
+            {
+                $card_issuer = Mage::app()->getLocale()->getCountryTranslation($country_iso2);
+                $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_COUNTRY')." : ".$card_issuer.$separator;
+            }        
+        }
+        if ($type == "fraud")
+        {
             $comment = Mage::helper('skrill')->__('SKRILL_BACKEND_GENERAL_TRANSACTION')." ".Mage::helper('skrill')->__('BACKEND_GENERAL_FRAUD').$separator;
-            $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_GENERAL_TRANSACTION_ID')." : ".$refundId.$separator;
-            if ($status == 'ACK') {
-                $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_STATUS')." : ".Mage::helper('skrill')->__('BACKEND_TT_'.$refundStatus).$separator;
-            }
-        }
+            $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_GENERAL_TRANSACTION_ID')." : ".$refund_id.$separator;
+            if ($status == 'ACK')
+                $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_STATUS')." : ".Mage::helper('skrill')->__('BACKEND_TT_'.$refund_status).$separator;
+        }        
         return $comment;
     }
 
@@ -460,85 +493,56 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
 
     // Skrill =====================================
 
-    /**
-     * get skrill payment url
-     *
-     * @return string
-     */
-    public function getSkrillPaymentUrl()
-    {
-        return $this->skrillPaymentUrl;
-    }
-
-    /**
-     * get sid
-     *
-     * @param array $parameters
-     * @return string
-     */
-    public function getSid($parameters)
-    {
-        $url = $this->skrillPaymentUrl;
-
-        $request = http_build_query($parameters, '', '&');
-
-        $response = Mage::helper('skrill/curl')->sendRequest($url, $request);
-
-        Mage::log('get sid request', null, 'skrill_log_file.log');
-        Mage::log($parameters, null, 'skrill_log_file.log');
-        Mage::log('get sid response : '.$response, null, 'skrill_log_file.log');
-
-        return $response;
-    }
-
     public function doQuery($action, $params)
     {
-        $url = $this->skrillQueryUrl;
+        $url = 'https://www.moneybookers.com/app/query.pl';
 
         $fields = $params;
         $fields['action'] = $action;
+        $fields['email'] = Mage::getStoreConfig('payment/skrill_settings/merchant_account');
+        $fields['password'] = md5(Mage::getStoreConfig('payment/skrill_settings/api_passwd'));
 
-        $request = http_build_query($fields, '', '&');
-
-        $response = Mage::helper('skrill/curl')->sendRequest($url, $request);
-
-        return $response;
-    }
-
-    public function getStatusTrn($parameters)
-    {
-        // check status_trn 3 times if no response.
-        for ($i=0; $i < 3; $i++) {
-            $response = true;
-            try {
-                $result = $this->doQuery('status_trn', $parameters);
-            } catch (Exception $e) {
-                $response = false;
-            }
-            if ($response && $result)
-            {
-                return $this->getResponseArray($result);
-            }
+        foreach($fields as $key=>$value) { 
+            $fields_string .= $key.'='.$value.'&'; 
         }
-        return false;
+        $fields_string = rtrim($fields_string, '&');
+
+        $curl = curl_init();
+
+        curl_setopt($curl,CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: application/x-www-form-urlencoded;charset=UTF-8'));
+        curl_setopt($curl, CURLOPT_FAILONERROR, 1);
+        curl_setopt($curl,CURLOPT_POST, count($fields));
+        curl_setopt($curl,CURLOPT_POSTFIELDS, $fields_string);
+
+        $result = curl_exec($curl);
+        
+        if(curl_errno($curl))
+        {
+            throw new Exception("Curl error: ". curl_error($curl));
+        }        
+
+        curl_close($curl);
+
+        return $result;
+
     }
 
     public function getResponseArray($strings)
     {
-        $responseArray = array();
+        $response_array = array();
         $string = explode("\n",$strings);
-        $responseArray['response_header'] = $string[0];
-        if(!empty($string[1])) {
-        $stringArr = explode("&",$string[1]);
-            foreach ($stringArr as $key => $value) {
-            $valueArr = explode("=",$value);
-            $responseArray[urldecode($valueArr[0])] = urldecode($valueArr[1]);
-            }
-            return $responseArray;
+        $response_array['response_header'] = $string[0];
+        $string_arr = explode("&",$string[1]);
+        foreach ($string_arr as $key => $value) {
+            $value_arr = explode("=",$value);
+            $response_array[urldecode($value_arr[0])] = urldecode($value_arr[1]);
         }
-        else {
-            return false;
-        }
+        return $response_array;        
     }
 
     public function getTrnStatus($code)
@@ -558,16 +562,13 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
                 break;
             case '-3':
                 $status = Mage::helper('skrill')->__('BACKEND_TT_CHARGEBACK');
-                break;
+                break;            
             case '-4':
                 $status = Mage::helper('skrill')->__('BACKEND_TT_REFUNDED');
-                break;
+                break;            
             case '-5':
                 $status = Mage::helper('skrill')->__('BACKEND_TT_REFUNDED_FAILED');
-                break;
-            case '-6':
-                $status = Mage::helper('skrill')->__('BACKEND_TT_REFUNDED_PENDING');
-                break;
+                break;            
             default:
                 $status = Mage::helper('skrill')->__('ERROR_GENERAL_ABANDONED_BYUSER');
                 break;
@@ -575,56 +576,83 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
         return $status;
     }
 
-    public function getComment($response, $separatorType = false, $type = false)
+    public function getComment($response, $separator_type, $type)
     {
-        if ( $separatorType == "info" )
+        if ( $separator_type == "info" )
             $separator = "<br />";
         else
-            $separator = ". ";
+            $separator = ". ";        
 
-        $comment = Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_STATUS')." : ".$this->getTrnStatus($response['status']).$separator;
-        if (isset($response['payment_type']))
+        $comment = Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_STATUS')." : ".Mage::helper('skrill')->getTrnStatus($response['status']).$separator;
+        if ($response['payment_type'])
             $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_PM')." : ".Mage::helper('skrill')->__('SKRILL_FRONTEND_PM_'.$response['payment_type']).$separator;
-        if (isset($response['payment_instrument_country']))
+        if ($response['payment_instrument_country'])
         {
-            $countryIso2 = Mage::helper('skrill')->getCountryIso2($response['payment_instrument_country']);
-            if ($countryIso2)
+            $country_iso2 = Mage::helper('skrill')->getCountryIso2($response['payment_instrument_country']);
+            if ($country_iso2)
             {
-                $cardIssuer = Mage::app()->getLocale()->getCountryTranslation($countryIso2);
-                $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_COUNTRY')." : ".$cardIssuer.$separator;
-            }
+                $card_issuer = Mage::app()->getLocale()->getCountryTranslation($country_iso2);
+                $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_COUNTRY')." : ".$card_issuer.$separator;
+            }        
         }
         if ($type == "fraud")
         {
             $comment = Mage::helper('skrill')->__('SKRILL_BACKEND_GENERAL_TRANSACTION')." ".Mage::helper('skrill')->__('BACKEND_GENERAL_FRAUD').$separator;
             $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_GENERAL_TRANSACTION_ID')." : ".$response['mb_transaction_id'].$separator;
-            $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_STATUS')." : ".$this->getTrnStatus($response['status']).$separator;
+            $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_STATUS')." : ".Mage::helper('skrill')->getTrnStatus($response['status']).$separator;
         }
-        if ($type == "refundStatus") {
-            $comment .= Mage::helper('skrill')->__('BACKEND_TT_AMOUNT')." : ".$response['amount'].$separator;
-        }
+
         return $comment;
     }
 
     public function doRefund($action, $params)
     {
-        $url = $this->skrillRefundUrl;
+        $url = 'https://www.moneybookers.com/app/refund.pl';
 
-        if ($action == "prepare") {
+        if ($action == "prepare")
+        {
             $fields = $params;
             $fields['action'] = $action;
-        } elseif ($action == "refund") {
+            $fields['email'] = Mage::getStoreConfig('payment/skrill_settings/merchant_account');
+            $fields['password'] = md5(Mage::getStoreConfig('payment/skrill_settings/api_passwd'));
+        }
+        else if ($action == "refund")
+        {
             $fields['action'] = $action;
             $fields['sid'] = $params;
         }
 
-        $request = http_build_query($fields, '', '&');
-        $response = Mage::helper('skrill/curl')->sendRequest($url, $request);
+        foreach($fields as $key=>$value) { 
+            $fields_string .= $key.'='.$value.'&'; 
+        }
+        $fields_string = rtrim($fields_string, '&');
 
-        return simplexml_load_string($response);
+        $curl = curl_init();
+
+        curl_setopt($curl,CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: application/x-www-form-urlencoded;charset=UTF-8'));
+        curl_setopt($curl, CURLOPT_FAILONERROR, 1);
+        curl_setopt($curl,CURLOPT_POST, count($fields));
+        curl_setopt($curl,CURLOPT_POSTFIELDS, $fields_string);
+
+        $result = curl_exec($curl);
+
+        if(curl_errno($curl))
+        {
+            return "failed";
+        }                
+
+        curl_close($curl);
+
+        return simplexml_load_string($result);
+
     }
 
-    public function getCountryIso3($iso2)
+    public function getCountryIso3($iso2) 
     {
         $iso3 = array(
             "AF" => "AFG",
@@ -880,7 +908,7 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
             return '';
     }
 
-    public function getCountryIso2($iso3)
+    public function getCountryIso2($iso3) 
     {
         $iso2 = array(
              "AFG" => "AF",
@@ -1135,7 +1163,7 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
             return '';
     }
 
-    public function getSkrillErrorMapping($code)
+    public function getSkrillErrorMapping($code) 
     {
         $error_messages = array(
             "01" => "SKRILL_ERROR_01",
@@ -1200,7 +1228,7 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
      * @param Mage_Sales_Model_Order $order
      * @return array
      */
-    public function getCustomerData(Mage_Core_Model_Abstract $order)
+    public function getCustomerData(Mage_Sales_Model_Order $order)
     {
         $data = array(
             'name_data'    => $this->getNameData($order),
@@ -1214,10 +1242,10 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Retrieve name data
      *
-     * @param Mage_Core_Model_Abstract $order
+     * @param Mage_Sales_Model_Order $order
      * @return array
      */
-    public function getNameData(Mage_Core_Model_Abstract $order)
+    public function getNameData(Mage_Sales_Model_Order $order)
     {
         $dob = '';
         if(!is_null($order->getCustomerDob())) {
@@ -1239,10 +1267,10 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Retrieve address data
      *
-     * @param Mage_Core_Model_Abstract $order
+     * @param Mage_Sales_Model_Order $order
      * @return array
      */
-    public function getAddressData(Mage_Core_Model_Abstract $order)
+    public function getAddressData(Mage_Sales_Model_Order $order)
     {
         $data = array(
             'country_code' => $order->getBillingAddress()->getCountryId(),
@@ -1258,10 +1286,10 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Retrieve contact data
      *
-     * @param Mage_Core_Model_Abstract $order
+     * @param Mage_Sales_Model_Order $order
      * @return array
      */
-    public function getContactData(Mage_Core_Model_Abstract $order)
+    public function getContactData(Mage_Sales_Model_Order $order)
     {
         $data = array(
             'email' => $order->getCustomerEmail(),
@@ -1275,19 +1303,19 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Retrieve Basket data
      *
-     * @param Mage_Core_Model_Abstract $order || Mage_Sales_Model_Quote $order
+     * @param Mage_Sales_Model_Order $order || Mage_Sales_Model_Quote $order
      * @return array
      */
-    public function getBasketData(Mage_Core_Model_Abstract $order)
+    public function getBasketData(Mage_Sales_Model_Order $order)
     {
-        if ( $order instanceof Mage_Core_Model_Abstract ) {
+        if ( $order instanceof Mage_Sales_Model_Order ) {
             $basket = array(
                 'amount' => $order->getGrandTotal(),
                 'currency' => $order->getOrderCurrencyCode(),
                 'baseCurrency' => $order->getBaseCurrencyCode(),
                 'baseAmount' => $order->getBaseGrandTotal()
             );
-        }
+        } 
         else if ( $order instanceof Mage_Sales_Model_Quote ) {
             $basket = array(
                 'amount' => $order->getGrandTotal(),
@@ -1303,10 +1331,10 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Retrieve method code for config loading
      *
-     * @param Mage_Core_Model_Abstract $order
+     * @param Mage_Sales_Model_Order $order
      * @return string
      */
-    public function getMethodCode(Mage_Core_Model_Abstract $order)
+    public function getMethodCode(Mage_Sales_Model_Order $order)
     {
         return str_replace('skrill', 'method', $order->getPayment()->getMethod());
     }
@@ -1314,10 +1342,10 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * This method returns the customer gender code
      *
-     * @param Mage_Core_Model_Abstract $order
+     * @param Mage_Sales_Model_Order $order
      * @return string
      */
-    public function getGender(Mage_Core_Model_Abstract $order)
+    public function getGender(Mage_Sales_Model_Order $order)
     {
         $gender = $order->getCustomerGender();
         if ($gender) {
@@ -1337,10 +1365,10 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Retrieve the prefix
      *
-     * @param Mage_Core_Model_Abstract $order
+     * @param Mage_Sales_Model_Order $order
      * @return string
      */
-    public function getPrefix(Mage_Core_Model_Abstract $order)
+    public function getPrefix(Mage_Sales_Model_Order $order)
     {
         $gender = $order->getCustomerPrefix();
         if ($gender) {
@@ -1369,8 +1397,8 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
     {
         return substr(Mage::app()->getLocale()->getLocaleCode(), 0, 2);
     }
-
-    public function invoice(Mage_Core_Model_Abstract $order)
+    
+    public function invoice(Mage_Sales_Model_Order $order)
     {
         $invoice = Mage::getModel('sales/service_order', $order)->prepareInvoice();
         $invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_ONLINE);
@@ -1385,11 +1413,17 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function getCountryIssuer($bin)
     {
-        $url = 'http://www.binlist.net/json/'.$bin;
+        $url = 'http://www.binlist.net/json/'.$bin;        
 
-        $response = Mage::helper('skrill/curl')->getResponse($url, true);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $resultArray = json_decode($result, true);
 
-        return $response['country_code'];
+        return $resultArray['country_code'];
     }
 
     public function getDateTime()
@@ -1400,7 +1434,7 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
 
         return $d->format("ymdhiu");
     }
-
+    
     public function randomNumber($length) {
         $result = '';
 
@@ -1412,3 +1446,4 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
 }
+

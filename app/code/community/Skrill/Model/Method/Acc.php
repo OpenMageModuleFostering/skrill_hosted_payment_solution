@@ -47,5 +47,5 @@ class Skrill_Model_Method_Acc extends Skrill_Model_Method_Skrill
      * @var type
      */
     protected $_methodTitle = 'SKRILL_FRONTEND_PM_ACC';
-
+    
 }

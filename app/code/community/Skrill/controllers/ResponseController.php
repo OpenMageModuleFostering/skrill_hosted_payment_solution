@@ -21,16 +21,25 @@
 
 /**
  * Response controller
- *
+ * 
  */
-
+ 
 class Skrill_ResponseController extends Mage_Core_Controller_Front_Action
 {
+
+    /**
+     * Construct
+     */
+    public function _construct()
+    {
+        parent::_construct();
+    }
+
    protected function _getCheckout()
     {
         return Mage::getSingleton('checkout/session');
-    }
-
+    }   
+    
     public function handleCpResponseAction()
     {
         $session = $this->_getCheckout();
@@ -40,23 +49,24 @@ class Skrill_ResponseController extends Mage_Core_Controller_Front_Action
         if (!$order->getId()) {
             Mage::throwException('No order for processing found');
         }
-
+        
         $this->_getPostResponseActionUrl($order);
     }
 
     protected function _checkStatusPayment($url, &$resultJson)
     {
         // check get status payment 3 times if no response.
-        for ($i=0; $i < 3; $i++) {
+        for ($i=0; $i < 3; $i++) { 
             $no_response = false;
             try {
-                $resultJson = Mage::helper('skrill')->getPaymentStatus($url);
+                $resultJson = Mage::helper('skrill')->checkStatusPayment($url);
             } catch (Exception $e) {
                 $no_response = true;
             }
             if (!$no_response && $resultJson)
             {
                 return false;
+                break;
             }
         }
         return true;
@@ -88,11 +98,11 @@ class Skrill_ResponseController extends Mage_Core_Controller_Front_Action
         $dataTransaction['currency'] = $resultJson['transaction']['payment']['clearing']['currency'];
         $payment_method = substr($resultJson['transaction']['payment']['code'],0,2);
         $dataTransaction['payment_method'] = $payment_method;
-        $payment_type = substr($resultJson['transaction']['payment']['code'],-2);
+        $payment_type = substr($resultJson['transaction']['payment']['code'],-2);        
         if ($payment_type == 'PA')
-            $dataTransaction['payment_type'] = "RV";
+            $dataTransaction['payment_type'] = "RV";        
         else
-            $dataTransaction['payment_type'] = "RF";
+            $dataTransaction['payment_type'] = "RF";        
 
         $postData = Mage::helper('skrill')->getPostExecutePayment($dataTransaction);
         $server = Mage::getSingleton('customer/session')->getServerMode();
@@ -112,16 +122,16 @@ class Skrill_ResponseController extends Mage_Core_Controller_Front_Action
             return false;
     }
 
-    protected function _getPostResponseActionUrl(Mage_Sales_Model_Order $order)
+    private function _getPostResponseActionUrl(Mage_Sales_Model_Order $order)
     {
-        $token = $this->getRequest()->getParam('token');
+                
+        $token = $_GET['token'];
         $server = Mage::getSingleton('customer/session')->getServerMode();
         $url = Mage::helper('skrill')->getStatusUrl($server, $token);
-
         $no_response = $this->_checkStatusPayment($url, $resultJson);
 
         if ($no_response)
-        {
+        { 
             $comment = Mage::helper('skrill')->getPayonComment('NOK');
             $order->addStatusHistoryComment($comment, false);
             $order->save();
@@ -129,28 +139,28 @@ class Skrill_ResponseController extends Mage_Core_Controller_Front_Action
         }
         else
         {
-            $isFraud = false;
+            $is_fraud = false;        
             $theResult = $resultJson['transaction']['processing']['result'];
             $returnCode = $resultJson['transaction']['processing']['return']['code'];
             $returnMessage = Mage::helper('skrill')->__(Mage::helper('skrill')->getErrorIdentifier($returnCode));
-
+            
             $currency = $resultJson['transaction']['payment']['clearing']['currency'];
             $payment_type = substr($resultJson['transaction']['payment']['code'],-2);
-
+            
             $uniqueId = $resultJson['transaction']['identification']['uniqueId'];
             $payment_brand = $resultJson['transaction']['account']['brand'];
             $ip_country = $resultJson['transaction']['customer']['contact']['ipCountry'];
             $bin = $resultJson['transaction']['account']['bin'];
 
             if ($theResult == 'ACK') {
-                if ($isFraud)
+                if ($is_fraud)
                 {
                     $refunded = $this->_doRefund($resultJson);
                     if ($refunded)
                         $refund_status = 'REFUNDED';
                     else
                         $refund_status = 'REFUNDED_FAILED';
-
+                    
                     $comment = Mage::helper('skrill')->getPayonComment($theResult, $payment_type, $payment_brand, $bin, 'history', 'fraud', $uniqueId, $refund_status);
                     $order->addStatusHistoryComment($comment, false);
                     $order->save();
@@ -182,29 +192,29 @@ class Skrill_ResponseController extends Mage_Core_Controller_Front_Action
                     $this->_redirect('checkout/onepage/success', array('_secure'=>true));
                 }
             } else if ($theResult == 'NOK') {
-                if ($isFraud)
+                if ($is_fraud)
                 {
                     $comment = Mage::helper('skrill')->getPayonComment($theResult, $payment_type, $payment_brand, $bin, 'history', 'fraud', $uniqueId);
                     $order->addStatusHistoryComment($comment, false);
-                    $order->save();
+                    $order->save();                    
                     $this->_redirectError(Mage::helper('skrill')->__('ERROR_GENERAL_FRAUD_DETECTION'));
                 }
                 else
-                {
+                {    
                     $comment = Mage::helper('skrill')->getPayonComment($theResult, $payment_type, $payment_brand, $bin);
                     $order->addStatusHistoryComment($comment, false);
                     $order->save();
                     $this->_redirectError($returnMessage);
                 }
             } else {
-                if ($isFraud)
+                if ($is_fraud)
                 {
                     $this->_redirectError(Mage::helper('skrill')->__('ERROR_GENERAL_FRAUD_DETECTION'));
                 }
                 else
-                {
+                {    
                     $this->_redirectError(Mage::helper('skrill')->__('ERROR_UNKNOWN'));
-                }
+                }                
             }
         }
     }
@@ -220,7 +230,7 @@ class Skrill_ResponseController extends Mage_Core_Controller_Front_Action
         $this->getLayout()->getBlock('content')->append($block);
         $this->renderLayout();
     }
-
+    
     public function renderDDAction()
     {
         $this->loadLayout();
@@ -236,7 +246,7 @@ class Skrill_ResponseController extends Mage_Core_Controller_Front_Action
         $this->getLayout()->getBlock('root')->setTemplate('skrill/payment/formcp.phtml');
         $this->renderLayout();
     }
-
+    
     public function renderCPAction()
     {
         $this->loadLayout();
@@ -245,5 +255,15 @@ class Skrill_ResponseController extends Mage_Core_Controller_Front_Action
         $this->getLayout()->getBlock('content')->append($block);
         $this->renderLayout();
     }
+    
+    public function myurlencode($val)
+    {
+        return urlencode(str_replace("/", "%2f", $val));
+    }
 
+    public function myurldecode($val)
+    {
+        return str_replace("%2f", "/", urldecode($val));
+    }
+    
 }

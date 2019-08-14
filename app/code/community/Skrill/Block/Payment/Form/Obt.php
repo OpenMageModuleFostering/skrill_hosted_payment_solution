@@ -26,7 +26,7 @@ class Skrill_Block_Payment_Form_Obt extends Skrill_Block_Payment_Form_Abstract
     protected function _construct()
     {
         $this->_logoAlt = Mage::helper('skrill')->__('SKRILL_FRONTEND_PM_OBT');
-        $this->_logoUrl = $this->getSkinUrl('images/skrill/obt.png');
+        $this->_logoUrl = "https://www.skrill.com/fileadmin/content/images/brand_centre/Payment_Options_by_Skrill/skrill-direct_120x60.png";
         parent::_construct();
     }
 

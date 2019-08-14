@@ -28,7 +28,7 @@ class Skrill_Block_Payment_Form_Flexible extends Skrill_Block_Payment_Form_Abstr
     protected function _construct()
     {
         $this->_logoAlt = Mage::helper('skrill')->__('SKRILL_FRONTEND_PM_FLEXIBLE');
-        $this->_logoUrl = $this->getSkinUrl('images/skrill/flexible.png');
+        $this->_logoUrl = $this->getSkinUrl('images/skrill/acceptance_mark.png');
         parent::_construct();
     }
 }
