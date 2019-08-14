@@ -21,21 +21,6 @@
 
 class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
 {
-
-    protected $processedStatus = '2';
-    protected $pendingStatus = '0';
-    protected $failedStatus = '-2';
-    protected $refundedStatus = '-4';
-    protected $refundFailedStatus = '-5';
-
-    /**
-     * Construct
-     */
-    public function _construct()
-    {
-        parent::_construct();
-    }
-
     /**
      * Render the Payment Form page
      */
@@ -52,17 +37,20 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
     public function handleResponseAction()
     {
         $orderId = urldecode($this->getRequest()->getParam('orderId'));
-        
+
         $order = Mage::getSingleton('sales/order');
         $order->loadByIncrementId($orderId);
-        
+
         if (!$order->getId())
             Mage::throwException('No order for processing found');
-        
-        $this->processRedirectResponse($order);
+
+        $this->processReturnUrl($order);
     }
 
-    public function cancelResponseAction(){
+    public function cancelResponseAction()
+    {
+        Mage::log('cancel action', null, 'skrill_log_file.log');
+
         $session = Mage::getSingleton('checkout/session');
         $order = Mage::getSingleton('sales/order');
         $order->loadByIncrementId($session->getLastRealOrderId());
@@ -72,37 +60,43 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
 
         $order->cancel();
         $order->save();
-        $this->_redirectError(Mage::helper('skrill')->__('ERROR_GENERAL_CANCEL'));
+        $this->_redirectError('ERROR_GENERAL_CANCEL');
     }
 
-    protected function processRedirectResponse($order)
+    protected function inActiveQuote($order)
     {
-        $payment = $order->getPayment();
+        Mage::getModel('sales/quote')->load($order->getQuoteId())->setIsActive(false)->save();
+    }
 
-        $statusUrlResponse = $payment->getAdditionalInformation('skrill_status_url_response');
-        if (isset($statusUrlResponse)) {
-            $responseStatus = unserialize($statusUrlResponse);
-        } else {
-            $parameters['trn_id'] = $this->getRequest()->getParam('transaction_id');
-            $responseStatus = Mage::helper('skrill')->getStatusTrn($parameters);
-        }
+    protected function processReturnUrl($order)
+    {
+        Mage::log('process return url', null, 'skrill_log_file.log');
 
-        if ($responseStatus) {
-            $this->validatePayment($order, $responseStatus);
-        } else {
-            $this->_redirectError(Mage::helper('skrill')->__('ERROR_GENERAL_NORESPONSE'));
-        }
+        $additionalInformation = $order->getPayment()->getAdditionalInformation();
+        Mage::log('payment additional information', null, 'skrill_log_file.log');
+        Mage::log($additionalInformation, null, 'skrill_log_file.log');
 
-        if ($payment->getAdditionalInformation('skrill_status') == $this->processedStatus) {
-            $this->_redirect('checkout/onepage/success');
-        } elseif ($payment->getAdditionalInformation('skrill_status') == $this->failedStatus) {
-            $failedReasonCode = $payment->getAdditionalInformation('failed_reason_code');
-            $this->_redirectError(Mage::helper('skrill')->__(Mage::helper('skrill')->getSkrillErrorMapping($failedReasonCode)));
-        } elseif ($payment->getAdditionalInformation('skrill_status') == $this->refundedStatus
-            || $payment->getAdditionalInformation('skrill_status') == $this->refundFailedStatus) {
-            $this->_redirectError(Mage::helper('skrill')->__('ERROR_GENERAL_FRAUD_DETECTION'));
+        if (isset($additionalInformation['skrill_status_url_response'])) {
+            if ($additionalInformation['skrill_status'] == Skrill_Model_Method_Skrill::PENDING_STATUS
+                || $additionalInformation['skrill_status'] == Skrill_Model_Method_Skrill::PROCESSED_STATUS
+            ) {
+                $this->_redirect('checkout/onepage/success');
+            } elseif ($additionalInformation['skrill_status'] == Skrill_Model_Method_Skrill::FAILED_STATUS) {
+                $failedReasonCode = $additionalInformation['failed_reason_code'];
+                $this->_redirectError(Mage::helper('skrill')->getSkrillErrorMapping($failedReasonCode));
+            } elseif ($additionalInformation['skrill_status'] == Skrill_Model_Method_Skrill::REFUNDED_STATUS
+                || $additionalInformation['skrill_status'] == Skrill_Model_Method_Skrill::REFUNDFAILED_STATUS) {
+                $this->_redirectError('ERROR_GENERAL_FRAUD_DETECTION');
+            } else {
+                $this->_redirectError('SKRILL_ERROR_99_GENERAL');
+            }
         } else {
-            $this->_redirectError(Mage::helper('skrill')->__('SKRILL_ERROR_99_GENERAL'));
+            $this->inActiveQuote($order);
+            $message = Mage::helper('skrill')->__('FRONTEND_MESSAGE_YOUR_ORDER').' '.
+                Mage::getStoreConfig('general/store_information/name').' '.
+                Mage::helper('skrill')->__('FRONTEND_MESSAGE_INPROCESS').' '.
+                Mage::helper('skrill')->__('FRONTEND_MESSAGE_PLEASE_BACK_AGAIN');
+            $this->_redirectWarning($message);
         }
     }
 
@@ -110,19 +104,35 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
     {
         $status = $this->getRequest()->getParam('status');
 
+        Mage::log('process status url with status : '.$status, null, 'skrill_log_file.log');
+
         if (isset($status)) {
             $orderId = $this->getRequest()->getParam('orderId');
+            $responseStatus = $this->getResponseStatus();
+
+            Mage::log('status url response', null, 'skrill_log_file.log');
+            Mage::log($responseStatus, null, 'skrill_log_file.log');
 
             $order = Mage::getSingleton('sales/order');
             $order->loadByIncrementId($orderId);
 
-            $order->getPayment()->setAdditionalInformation('skrill_status_url_response', serialize($this->getResponseStatus()));
-            $order->getPayment()->save();
+            $order->getPayment()->setAdditionalInformation(
+                'skrill_status_url_response',
+                serialize($responseStatus)
+            )->save();
+
+            if ($order->getPayment()->getAdditionalInformation('skrill_status') == Skrill_Model_Method_Skrill::PENDING_STATUS) {
+                $this->updateOrderStatus($order, $responseStatus);
+            } else {
+                $this->validatePayment($order, $responseStatus);
+            }
         }
     }
 
     protected function validatePayment($order, $responseStatus)
     {
+        Mage::log('validate payment', null, 'skrill_log_file.log');
+
         if ($responseStatus['payment_type'] == 'NGP') {
             $responseStatus['payment_type'] = 'OBT';
         }
@@ -133,6 +143,9 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
         $this->saveAdditionalInformation($order, $responseStatus);
 
         $isFraud = $this->isFraud($order, $responseStatus);
+        $isFraudLog = ($isFraud) ? 'true' : 'false';
+        Mage::log('is Fraud : '.$isFraudLog, null, 'skrill_log_file.log');
+
         if ($isFraud) {
             $this->processFraud($order, $responseStatus);
         } else {
@@ -144,7 +157,7 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
     protected function getResponseStatus()
     {
         $responseStatus = array();
-        foreach ($_REQUEST as $responseName => $responseValue) {
+        foreach ($this->getRequest()->getParams() as $responseName => $responseValue) {
             $responseStatus[strtolower($responseName)] = $responseValue;
         }
         return $responseStatus;
@@ -152,21 +165,29 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
 
     protected function saveAdditionalInformation($order, $responseStatus)
     {
-        if(isset($responseStatus['transaction_id'])) {
-            $order->getPayment()->setAdditionalInformation('skrill_transaction_id', $responseStatus['transaction_id']); }
-        if(isset($responseStatus['mb_transaction_id'])) {
-            $order->getPayment()->setAdditionalInformation('skrill_mb_transaction_id', $responseStatus['mb_transaction_id']); }
-        if(isset($responseStatus['ip_country'])) {    
-            $order->getPayment()->setAdditionalInformation('skrill_ip_country', $responseStatus['ip_country']); }
-        if(isset($responseStatus['status'])) {
-            $order->getPayment()->setAdditionalInformation('skrill_status', $responseStatus['status']); }
-        if(isset($responseStatus['payment_type'])) {
-            $order->getPayment()->setAdditionalInformation('skrill_payment_type', $responseStatus['payment_type']); }
-        if(isset($responseStatus['payment_instrument_country'])) {    
-            $order->getPayment()->setAdditionalInformation('skrill_issuer_country', $responseStatus['payment_instrument_country']); }
-        if(isset($responseStatus['currency'])) {
-            $order->getPayment()->setAdditionalInformation('skrill_currency', $responseStatus['currency']); }
-        $order->getPayment()->save();
+        $payment = $order->getPayment();
+        if (isset($responseStatus['transaction_id'])) {
+            $payment->setAdditionalInformation('skrill_transaction_id', $responseStatus['transaction_id']);
+        }
+        if (isset($responseStatus['mb_transaction_id'])) {
+            $payment->setAdditionalInformation('skrill_mb_transaction_id', $responseStatus['mb_transaction_id']);
+        }
+        if (isset($responseStatus['ip_country'])) {
+            $payment->setAdditionalInformation('skrill_ip_country', $responseStatus['ip_country']);
+        }
+        if (isset($responseStatus['status'])) {
+            $payment->setAdditionalInformation('skrill_status', $responseStatus['status']);
+        }
+        if (isset($responseStatus['payment_type'])) {
+            $payment->setAdditionalInformation('skrill_payment_type', $responseStatus['payment_type']);
+        }
+        if (isset($responseStatus['payment_instrument_country'])) {
+            $payment->setAdditionalInformation('skrill_issuer_country', $responseStatus['payment_instrument_country']);
+        }
+        if (isset($responseStatus['currency'])) {
+            $payment->setAdditionalInformation('skrill_currency', $responseStatus['currency']);
+        }
+        $payment->save();
     }
 
     protected function setNumberFormat($number)
@@ -175,13 +196,9 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
         return number_format($number, 2, '.', '');
     }
 
-    protected function isFraud($order, $response)
+    protected function isFraud($order, $responseStatus)
     {
-        if ($response['amount']) {
-            return !($response['md5sig'] == $this->generateMd5sig($order, $response));
-        } else {
-            return false;
-        }
+        return !($responseStatus['md5sig'] == $this->generateMd5sig($order, $responseStatus));
     }
 
     protected function generateMd5sig($order, $response)
@@ -193,6 +210,8 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
 
     protected function processFraud($order, $responseStatus)
     {
+        Mage::log('process Fraud', null, 'skrill_log_file.log');
+
         $comment = Mage::helper('skrill')->getComment($responseStatus);
         $order->addStatusHistoryComment($comment, false);
         $order->save();
@@ -207,38 +226,48 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
         $status = (string) $xmlResult->status;
         $mbTransactionId = (string) $xmlResult->mb_transaction_id;
 
-        if ($status == $this->processedStatus) {
-            $responseStatus['status'] = $this->refundedStatus;
+        if ($status == Skrill_Model_Method_Skrill::PROCESSED_STATUS) {
+            $responseStatus['status'] = Skrill_Model_Method_Skrill::REFUNDED_STATUS;
             $order->getPayment()->setAdditionalInformation('skrill_status', $responseStatus['status']);
             $order->getPayment()->setTransactionId($mbTransactionId)
                     ->setIsTransactionClosed(1)->save();
         } else {
-            $responseStatus['status'] = $this->refundFailedStatus;
+            $responseStatus['status'] = Skrill_Model_Method_Skrill::REFUNDFAILED_STATUS;
             $order->getPayment()->setAdditionalInformation('skrill_status', $responseStatus['status']);
             $order->getPayment()->setTransactionId($mbTransactionId)
-                    ->setIsTransactionClosed(0)->save();      
+                    ->setIsTransactionClosed(0)->save();
         }
 
         $comment = Mage::helper('skrill')->getComment($responseStatus,"history","fraud");
+        $order->cancel();
+        $order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, 'fraud')->save();
         $order->addStatusHistoryComment($comment, false);
         $order->save();
     }
 
     protected function processPayment($order, $responseStatus)
     {
-        if ($responseStatus['status'] == $this->processedStatus) {
+        Mage::log('process payment', null, 'skrill_log_file.log');
+
+        if ($responseStatus['status'] == Skrill_Model_Method_Skrill::PENDING_STATUS) {
+            $order->sendNewOrderEmail();
+            $comment = Mage::helper('skrill')->getComment($responseStatus);
+            $order->setState(Mage_Sales_Model_Order::STATE_NEW, true)->save();
+            $order->addStatusHistoryComment($comment, false)->save();
+            $this->inActiveQuote($order);
+        } elseif ($responseStatus['status'] == Skrill_Model_Method_Skrill::PROCESSED_STATUS) {
             $order->sendNewOrderEmail();
             Mage::helper('skrill')->invoice($order);
             $comment = Mage::helper('skrill')->getComment($responseStatus);
-            $order->addStatusHistoryComment($comment, 'payment_accepted');
-            $order->save();
-            
-            Mage::getModel('sales/quote')->load($order->getQuoteId())->setIsActive(false)->save();
+            $order->addStatusHistoryComment($comment, 'payment_accepted')->save();
+            $this->inActiveQuote($order);
         } else {
-            if ($response['failed_reason_code']) {
-                $order->getPayment()->setAdditionalInformation('failed_reason_code', $responseStatus['failed_reason_code']);
+            if ($responseStatus['failed_reason_code']) {
+                $order->getPayment()->setAdditionalInformation(
+                    'failed_reason_code',
+                    $responseStatus['failed_reason_code']
+                );
             }
-
             $comment = Mage::helper('skrill')->getComment($responseStatus);
             $order->addStatusHistoryComment($comment, false);
             $order->cancel();
@@ -246,10 +275,77 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
         }
     }
 
+    protected function updateOrderStatus($order, $responseStatus)
+    {
+        Mage::log('update order status with status : '.$responseStatus['status'], null, 'skrill_log_file.log');
+
+        if ($responseStatus['status'] == Skrill_Model_Method_Skrill::PROCESSED_STATUS) {
+            Mage::helper('skrill')->invoice($order);
+            $comment = Mage::helper('skrill')->getComment($responseStatus);
+            $order->addStatusHistoryComment($comment, 'payment_accepted')->save();
+        } elseif ($responseStatus['status'] == Skrill_Model_Method_Skrill::FAILED_STATUS) {
+            if ($responseStatus['failed_reason_code']) {
+                $order->getPayment()->setAdditionalInformation(
+                    'failed_reason_code',
+                    $responseStatus['failed_reason_code']
+                );
+            }
+            $comment = Mage::helper('skrill')->getComment($responseStatus);
+            $order->addStatusHistoryComment($comment, false);
+            $order->cancel();
+            $order->save();
+        }
+    }
+
+    public function handleRefundStatusResponseAction()
+    {
+        $status = $this->getRequest()->getParam('status');
+
+        Mage::log('process refund status url with status : '.$status, null, 'skrill_log_file.log');
+
+        if (isset($status)) {
+            $orderId = $this->getRequest()->getParam('orderId');
+            $responseStatus = $this->getResponseStatus();
+
+            Mage::log('refund status url response', null, 'skrill_log_file.log');
+            Mage::log($responseStatus, null, 'skrill_log_file.log');
+
+            $order = Mage::getSingleton('sales/order');
+            $order->loadByIncrementId($orderId);
+
+            $order->getPayment()->setAdditionalInformation(
+                'skrill_refund_status_url_response',
+                serialize($responseStatus)
+            )->save();
+
+            if ($order->getPayment()->getAdditionalInformation('skrill_refund_status') == Skrill_Model_Method_Skrill::REFUNDPENDING_STATUS) {
+                if ($responseStatus['status'] == Skrill_Model_Method_Skrill::PROCESSED_STATUS) {
+                    $responseStatus['status'] = Skrill_Model_Method_Skrill::REFUNDED_STATUS;
+                    $comment = Mage::helper('skrill')->getComment($responseStatus, false, 'refundStatus');
+                    $order->addStatusHistoryComment($comment, false)->save();
+                } else {
+                    $responseStatus['status'] = Skrill_Model_Method_Skrill::REFUNDFAILED_STATUS;
+                }
+                $order->getPayment()->setAdditionalInformation('skrill_refund_status', $responseStatus['status'])->save();
+            }
+        }
+    }
+
+    protected function _redirectWarning($message)
+    {
+        Mage::log('redirect warning', null, 'skrill_log_file.log');
+
+        $url = Mage::getUrl('', array('_secure' => true));
+        Mage::getSingleton('core/session')->addWarning($message);
+        $this->getResponse()->setRedirect($url);
+    }
+
     protected function _redirectError($returnMessage)
     {
+        Mage::log('redirect error', null, 'skrill_log_file.log');
+
         $url = Mage::helper('checkout/url')->getCheckoutUrl();
-        Mage::getSingleton('core/session')->addError($returnMessage);
+        Mage::getSingleton('core/session')->addError(Mage::helper('skrill')->__($returnMessage));
         $this->getResponse()->setRedirect($url);
     }
 }

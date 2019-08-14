@@ -20,58 +20,34 @@
 
 class Skrill_Helper_VersionTracker extends Mage_Core_Helper_Abstract
 {
-    private static $versionTrackerUrl = 'http://api.dbserver.payreto.eu/v1/tracker';
+    protected $versionTrackerUrl = 'http://api.dbserver.payreto.eu/v1/tracker';
 
-    private static function getVersionTrackerUrl()
+    protected function getVersionTrackerUrl()
     {
-        return self::$versionTrackerUrl;
+        return $this->versionTrackerUrl;
     }
 
-    private static function getResponseData($data, $url)
+    protected function getVersionTrackerParameter($versionData)
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $versionData['hash'] = md5($versionData['shop_version'].$versionData['plugin_version'].$versionData['client']);
 
-        $response = curl_exec($ch);
-        if (curl_errno($ch)) {
-            return false;
-        }
-        curl_close($ch);
-        return json_decode($response, true);
+        return http_build_query(array_filter($versionData), '', '&');
     }
 
-    private static function getVersionTrackerParameter($versionData)
+    public function sendVersionTracker($versionData)
     {
-        $data = 'transaction_mode=' .$versionData['transaction_mode'].
-                '&ip_address=' .$versionData['ip_address'].
-                '&shop_version=' .$versionData['shop_version'].
-                '&plugin_version=' .$versionData['plugin_version'].
-                '&client=' .$versionData['client'].
-                '&hash=' .md5($versionData['shop_version'].$versionData['plugin_version'].$versionData['client']);
+        Mage::log('send version tracker', null, 'skrill_log_file.log');
 
-        if ($versionData['shop_system']) {
-            $data .= '&shop_system=' .$versionData['shop_system'];
-        }
-        if ($versionData['email']) {
-            $data .= '&email=' .$versionData['email'];
-        }
-        if ($versionData['merchant_id']) {
-            $data .= '&merchant_id=' .$versionData['merchant_id'];
-        }
-        if ($versionData['shop_url']) {
-            $data .= '&shop_url=' .$versionData['shop_url'];
-        }
-        return $data;
-    }
+        $url = $this->getVersionTrackerUrl();
 
-    public static function sendVersionTracker($versionData)
-    {
-        $postData = self::getVersionTrackerParameter($versionData);
-        $url = self::getVersionTrackerUrl();
-        return self::getResponseData($postData, $url);
+        $request = $this->getVersionTrackerParameter($versionData);
+        Mage::log('send version tracker request', null, 'skrill_log_file.log');
+        Mage::log($versionData, null, 'skrill_log_file.log');
+
+        $response = Mage::helper('skrill/curl')->sendRequest($url, $request, true);
+        Mage::log('send version tracker response', null, 'skrill_log_file.log');
+        Mage::log($response, null, 'skrill_log_file.log');
+
+        return $response;
     }
 }

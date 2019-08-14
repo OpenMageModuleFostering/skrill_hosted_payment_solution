@@ -25,20 +25,20 @@ $installer->run("
    INSERT INTO  `{$this->getTable('sales/order_status')}` (
         `status` ,
         `label`
-    ) SELECT 'payment_accepted','Payment Accepted' FROM dual WHERE NOT EXISTS (SELECT * FROM `{$this->getTable('sales/order_status')}` WHERE `status` = 'payment_accepted' AND `label` = 'Payment Accepted');	
+    ) SELECT 'payment_accepted','Payment Accepted' FROM dual WHERE NOT EXISTS (SELECT * FROM `{$this->getTable('sales/order_status')}` WHERE `status` = 'payment_accepted' AND `label` = 'Payment Accepted');
    INSERT INTO  `{$this->getTable('sales/order_status')}` (
         `status` ,
         `label`
-    ) SELECT 'payment_pa','Pre-Authorization of Payment' FROM dual WHERE NOT EXISTS (SELECT * FROM `{$this->getTable('sales/order_status')}` WHERE `status` = 'payment_pa' AND `label` = 'Pre-Authorization of Payment');	
+    ) SELECT 'payment_pa','Pre-Authorization of Payment' FROM dual WHERE NOT EXISTS (SELECT * FROM `{$this->getTable('sales/order_status')}` WHERE `status` = 'payment_pa' AND `label` = 'Pre-Authorization of Payment');
    INSERT INTO  `{$this->getTable('sales/order_status_state')}` (
         `status` ,
         `state` ,
         `is_default`
-    ) SELECT 'payment_accepted','processing','0' FROM dual WHERE NOT EXISTS (SELECT * FROM `{$this->getTable('sales/order_status_state')}` WHERE `status` = 'payment_accepted' AND `state` = 'processing');	
+    ) SELECT 'payment_accepted','processing','0' FROM dual WHERE NOT EXISTS (SELECT * FROM `{$this->getTable('sales/order_status_state')}` WHERE `status` = 'payment_accepted' AND `state` = 'processing');
    INSERT INTO  `{$this->getTable('sales/order_status_state')}` (
         `status` ,
         `state` ,
         `is_default`
-    ) SELECT 'payment_pa','new','1' FROM dual WHERE NOT EXISTS (SELECT * FROM `{$this->getTable('sales/order_status_state')}` WHERE `status` = 'payment_pa' AND `state` = 'new');	
+    ) SELECT 'payment_pa','new','1' FROM dual WHERE NOT EXISTS (SELECT * FROM `{$this->getTable('sales/order_status_state')}` WHERE `status` = 'payment_pa' AND `state` = 'new');
 ");
 $installer->endSetup();

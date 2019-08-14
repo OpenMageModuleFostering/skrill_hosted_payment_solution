@@ -1,22 +1,24 @@
 function checkingAllPaymentEnabled() {
 	var flexible_active = document.getElementById("skrill_skrill_flexible_active").value;
-	var list_cards = [
+	var list_payments = [
 		"acc",
+		"ali",
 		"amx",
 		"csi",
 		"did",
+		"din",
 		"dnk",
 		"ebt",
-		"ent",
 		"epy",
 		"gcb",
 		"gir",
 		"glu",
 		"idl",
-                "ntl",
+		"jcb",
 		"mae",
 		"msc",
 		"npy",
+        "ntl",
 		"obt",
 		"pli",
 		"psc",
@@ -27,10 +29,10 @@ function checkingAllPaymentEnabled() {
 		"vse",
 		"wlt"
 	];
-	for(i=0; i<list_cards.length;i++){
+	for(i=0; i<list_payments.length;i++){
 		if (flexible_active == 1)
 		{
-			document.getElementById("skrill_skrill_"+ list_cards[i] +"_show_separately").value = 0;
+			document.getElementById("skrill_skrill_"+ list_payments[i] +"_show_separately").value = 0;
 		}
 	}
 }
@@ -41,7 +43,9 @@ function checkingAllCardEnabled() {
 	var list_cards = [
 		"vsa",
 		"msc",
-		"amx"
+		"amx",
+		"din",
+		"jcb"
 	];
 	for(i=0; i<list_cards.length;i++){
 		if (acc_active == 1 && acc_separately == 1)
@@ -72,15 +76,15 @@ function initElementClass(){
 document.getElementById("skrill_skrill_settings_merchant_account").placeholder = "example@mail.de";
 
 document.getElementById("skrill_skrill_flexible_active").onchange = function(){
-	checkingAllPaymentEnabled();    
+	checkingAllPaymentEnabled();
 };
 
 document.getElementById("skrill_skrill_acc_active").onchange = function(){
-	checkingAllCardEnabled();    
+	checkingAllCardEnabled();
 };
 
 document.getElementById("skrill_skrill_acc_show_separately").onchange = function(){
-	checkingAllCardEnabled();    
+	checkingAllCardEnabled();
 };
 
 initElementClass();

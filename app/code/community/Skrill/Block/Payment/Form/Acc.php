@@ -26,7 +26,7 @@ class Skrill_Block_Payment_Form_Acc extends Skrill_Block_Payment_Form_Abstract
     protected function _construct()
     {
         $this->_logoAlt = Mage::helper('skrill')->__('SKRILL_FRONTEND_PM_ACC');
-        $this->_logoUrl = "https://www.skrill.com/fileadmin/content/images/brand_centre/Payment_Options/multiple-options.gif";
+        $this->_logoUrl = $this->getSkinUrl("images/skrill/acc.png");
         parent::_construct();
     }
 

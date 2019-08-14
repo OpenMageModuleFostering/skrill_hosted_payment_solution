@@ -22,13 +22,13 @@
  * Abstract payment model
  *
  */
- 
+
 // $ExternalLibPath=Mage::getModuleDir('', 'Skrill') . DS . 'core' . DS .'copyandpay.php';
 // require_once ($ExternalLibPath);
 
 abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Abstract
 {
-    
+
     /**
      * Is method a gateaway
      *
@@ -49,7 +49,7 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
      * @var boolean
      */
     protected $_canUseForMultishipping = false;
-    
+
     /**
      * Is a initalize needed
      *
@@ -133,10 +133,10 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
      * Retrieve the server mode
      *
      * @return string
-     */ 
+     */
     public function getServerMode()
     {
-        $server_mode = Mage::getStoreConfig('payment/' . $this->_skrillCode . '/server_mode', $this->getOrder()->getStoreId());         
+        $server_mode = Mage::getStoreConfig('payment/' . $this->_skrillCode . '/server_mode', $this->getOrder()->getStoreId());
         return $server_mode;
     }
 
@@ -215,7 +215,7 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
 
         $lang='';
         $jsUrl = Mage::helper('skrill')->getJsUrl($server,$lang);
-        Mage::getSingleton('customer/session')->setJsUrl($jsUrl);  
+        Mage::getSingleton('customer/session')->setJsUrl($jsUrl);
 
         $dataCust['first_name'] = $name['first_name'];
         $dataCust['last_name'] = $name['last_name'];
@@ -243,10 +243,10 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
             Mage::throwException(Mage::helper('skrill')->__('ERROR_GENERAL_REDIRECT'));
         }
 
-        Mage::getSingleton('customer/session')->setIframeToken($token);         
-        Mage::getSingleton('customer/session')->setIframeName($name['first_name'].' '.$name['last_name']);          
-        Mage::getSingleton('customer/session')->setIframeBrand($this->_accountBrand);           
-        Mage::getSingleton('customer/session')->setIframeFrontendResponse(Mage::getUrl('skrill/response/handleCpResponse/',array('_secure'=>true)));           
+        Mage::getSingleton('customer/session')->setIframeToken($token);
+        Mage::getSingleton('customer/session')->setIframeName($name['first_name'].' '.$name['last_name']);
+        Mage::getSingleton('customer/session')->setIframeBrand($this->_accountBrand);
+        Mage::getSingleton('customer/session')->setIframeFrontendResponse(Mage::getUrl('skrill/response/handleCpResponse/',array('_secure'=>true)));
 
         if ($this->_code == "skrill_creditcard")
         {
@@ -269,39 +269,29 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
 
         return Mage::getSingleton('customer/session')->getRedirectUrl();
     }
-    
+
     protected function getTransactionMode()
     {
         $server = $this->getServerMode();
-        
-        if ($server == "LIVE")
-        {
+
+        if ($server == "LIVE") {
             return 'LIVE';
-        }
-        else
-        {
+        } else {
             switch ($this->_code) {
                 case 'skrill_creditcard':
                 case 'skrill_directdebit':
-                case 'skrill_eps':              
+                case 'skrill_eps':
                 case 'skrill_giropay':
-                case 'skrill_yandex':                  
+                case 'skrill_yandex':
                     return 'INTEGRATOR_TEST';
-                    break;
-                case 'skrill_ideal':
-                case 'skrill_paypal':
-                case 'skrill_sofortuberweisung':
                 default:
-                    return 'CONNECTOR_TEST';
-                    break;
-                    
             }
         }
-    }   
+    }
 
     public function capture(Varien_Object $payment, $amount)
     {
-        
+
         if ($payment->getAdditionalInformation('skrill_transaction_code') == 'PA') {
 
             $order = $payment->getOrder();
@@ -320,9 +310,9 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
             $dataTransaction['currency'] = $order_currency;
             $dataTransaction['payment_method'] = $this->_methodCode;
             $dataTransaction['payment_type'] = "CP";
-            
+
             $postData = Mage::helper('skrill')->getPostExecutePayment($dataTransaction);
-        
+
             $server = $this->getServerMode();
 
             $url = Mage::helper('skrill')->getExecuteUrl($server);
@@ -335,7 +325,7 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
             }
 
             $result = Mage::helper('skrill')->buildResponseArray($response);
-           
+
             if ($result['PROCESSING.RESULT'] == 'ACK') {
                 $payment->setAdditionalInformation('skrill_status', "ACK");
                 $payment->setAdditionalInformation('skrill_transaction_code', "CP");
@@ -344,24 +334,24 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
                         ->setIsTransactionClosed(1)->save();
             } else {
                 $comment = Mage::helper('skrill')->getPayonComment($result['PROCESSING.RESULT'], "CP");
-                $payment->getOrder()->addStatusHistoryComment($comment, false)->save();        
+                $payment->getOrder()->addStatusHistoryComment($comment, false)->save();
                 Mage::throwException(Mage::helper('skrill')->__('ERROR_GENERAL_PROCESSING'));
             }
-        
+
         }
         else {
             $payment->setStatus('APPROVED')
                     ->setTransactionId($payment->getAdditionalInformation('skrill_uniqueid'))
-                    ->setIsTransactionClosed(1)->save();            
+                    ->setIsTransactionClosed(1)->save();
         }
         return $this;
     }
-    
+
     public function processInvoice($invoice, $payment)
     {
-        $invoice->setTransactionId($payment->getLastTransId());
-        $invoice->save(); 
+        $invoice->setTransactionId($payment->getLastTransId())->save();
         $invoice->sendEmail();
+        $payment->getOrder()->setState(Mage_Sales_Model_Order::STATE_PROCESSING, 'payment_accepted')->save();
         return $this;
     }
 
@@ -383,7 +373,7 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
         $dataTransaction['currency'] = $order_currency;
         $dataTransaction['payment_method'] = $this->_methodCode;
         $dataTransaction['payment_type'] = "RF";
-        
+
         $postData = Mage::helper('skrill')->getPostExecutePayment($dataTransaction);
 
         $server = $this->getServerMode();
@@ -399,7 +389,7 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
 
         $result = Mage::helper('skrill')->buildResponseArray($response);
 
-        if ($result['PROCESSING.RESULT'] == 'ACK') {        
+        if ($result['PROCESSING.RESULT'] == 'ACK') {
             $payment->setAdditionalInformation('skrill_status', "ACK");
             $payment->setAdditionalInformation('skrill_transaction_code', "RF");
             $payment->setTransactionId($result['IDENTIFICATION.UNIQUEID'])
@@ -409,10 +399,10 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
             $payment->getOrder()->addStatusHistoryComment($comment, false)->save();
             Mage::throwException(Mage::helper('skrill')->__('ERROR_GENERAL_PROCESSING'));
         }
-            
+
         return $this;
-    }   
-    
+    }
+
     /**
      *
      * @return string
@@ -426,7 +416,7 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
     {
         return $this->_paymentType;
     }
-    
+
     /**
      *
      * @return string
@@ -449,11 +439,11 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
 
     protected function getActionUrl($action_name)
     {
-        return Mage::app()->getStore(Mage::getDesign()->getStore())->getUrl('skrill/response/'.$action_name.'/', array('_secure'=>true)); 
+        return Mage::app()->getStore(Mage::getDesign()->getStore())->getUrl('skrill/response/'.$action_name.'/', array('_secure'=>true));
     }
     /**
      * Set the iframe Url
-     * 
+     *
      * @param array $response
      */
     protected function _paymentform()
@@ -472,12 +462,12 @@ abstract class Skrill_Model_Method_Abstract extends Mage_Payment_Model_Method_Ab
             case 'skrill_paytrail':
             case 'skrill_yandex':
                 Mage::getSingleton('customer/session')->setRedirectUrl($this->getActionUrl("renderRedirect"));
-                break;            
+                break;
             default:
                 Mage::getSingleton('customer/session')->setRedirectUrl($this->getActionUrl("renderCP"));
                 break;
         }
     }
-    
+
 }
 

@@ -22,7 +22,7 @@
 <config>
     <modules>
         <Skrill>
-            <version>1.0.21</version>
+            <version>1.0.24</version>
         </Skrill>
     </modules>
 
@@ -57,7 +57,7 @@
 					<class>Mage_Core_Model_Resource_Setup</class>
                 </setup>
             </skrill_setup>
-        </resources>		
+        </resources>
         <blocks>
             <skrill>
                 <class>Skrill_Block</class>
@@ -72,7 +72,7 @@
                         <method>activateQuote</method>
                     </skrill_success_observer>
                 </observers>
-            </sales_model_service_quote_submit_success>     
+            </sales_model_service_quote_submit_success>
         </events>
         <sales>
             <order>
@@ -82,7 +82,7 @@
                     </payment_accepted>
                     <payment_remotely translate="label">
                         <label>SUCCESS_PREAUTH_ACC</label>
-                    </payment_remotely>					
+                    </payment_remotely>
                 </statuses>
 				<states>
 					<pending_payment>
@@ -94,7 +94,7 @@
 						<statuses>
 							<payment_accepted/>
 						</statuses>
-					</processing>					
+					</processing>
 				</states>
             </order>
         </sales>
@@ -102,7 +102,7 @@
             <groups>
                 <skrillpm>Skrill Payment Methods</skrillpm>
             </groups>
-        </payment>		
+        </payment>
     </global>
 
     <frontend>
@@ -162,15 +162,15 @@
             <updates>
                 <skrill_checkout>
                     <file>skrill_checkout.xml</file>
-                </skrill_checkout>                
+                </skrill_checkout>
             </updates>
-        </layout>        
+        </layout>
     </frontend>
 
     <default>
-        <payment>           
+        <payment>
             <skrill_settings>
-                <version>1.0.21</version>
+                <version>1.0.24</version>
                 <merchant_id></merchant_id>
                 <merchant_account></merchant_account>
                 <recipient_desc></recipient_desc>
@@ -185,8 +185,8 @@
                 <active>1</active>
                 <sender></sender>
                 <login></login>
-                <password></password>               
-            </skrill_general>            
+                <password></password>
+            </skrill_general>
             <skrill_flexible>
                 <active>0</active>
                 <show_separately>1</show_separately>
@@ -218,7 +218,7 @@
                 <password></password>
                 <model>skrill/method_psc</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>              
+                <payment_action>authorize</payment_action>
                 <title>Paysafecard</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>AS,AT,BE,CA,HR,CY,CZ,DK,FI,FR,DE,GU,HU,IE,IT,LV,LU,MT,MX,NL,MP,NO,PL,PT,PR,RO,SK,SI,ES,SE,CH,TR,GB,US,VI</specificcountry>
@@ -234,10 +234,10 @@
                 <channel_id></channel_id>
                 <sender></sender>
                 <login></login>
-                <password></password>               
+                <password></password>
                 <model>skrill/method_acc</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Credit Card / Visa, Mastercard, AMEX</title>
                 <allowspecific>0</allowspecific>
                 <group>skrillpm</group>
@@ -247,7 +247,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_vsa</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Visa</title>
                 <allowspecific>0</allowspecific>
                 <group>skrillpm</group>
@@ -257,7 +257,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_msc</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>MasterCard</title>
                 <allowspecific>0</allowspecific>
                 <group>skrillpm</group>
@@ -267,7 +267,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_vse</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Visa Electron</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>AF,AL,DZ,AS,AD,AO,AI,AQ,AG,AR,AM,AW,AU,AT,AZ,BS,BH,BD,BB,BY,BE,BZ,BJ,BM,BT,BO,BA,BW,BV,BR,IO,VG,BN,BG,BF,BI,KH,CM,CA,CV,KY,CF,TD,CL,CN,CX,CC,CO,KM,CG,CD,CK,CR,HR,CU,CY,CZ,CI,DK,DJ,DM,DO,EC,EG,SV,GQ,ER,EE,ET,FK,FO,FJ,FI,FR,GF,PF,TF,GA,GM,GE,DE,GH,GI,GR,GL,GD,GP,GU,GT,GG,GN,GW,GY,HT,HM,HN,HK,HU,IS,IN,ID,IR,IQ,IE,IM,IL,IT,JM,JP,JE,JO,KZ,KE,KI,KW,KG,LA,LV,LB,LS,LR,LY,LI,LT,LU,MO,MK,MG,MW,MY,MV,ML,MT,MH,MQ,MR,MU,YT,MX,FM,MD,MC,MN,ME,MS,MA,MZ,MM,NA,NR,NP,NL,AN,NC,NZ,NI,NE,NG,NU,NF,KP,MP,NO,OM,PK,PW,PS,PA,PG,PY,PE,PH,PN,PL,PT,PR,QA,RO,RU,RW,RE,BL,SH,KN,LC,MF,PM,WS,SM,SA,SN,RS,SC,SL,SG,SK,SI,SB,SO,ZA,GS,KR,ES,LK,VC,SD,SR,SJ,SZ,SE,CH,SY,ST,TW,TJ,TZ,TH,TL,TG,TK,TO,TT,TN,TR,TM,TC,TV,UM,VI,UG,UA,AE,GB,UY,UZ,VU,VA,VE,VN,WF,EH,YE,ZM,ZW,AX</specificcountry>
@@ -278,7 +278,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_mae</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Maestro</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>GB,ES,IE,AT</specificcountry>
@@ -289,17 +289,37 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_amx</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>American Express</title>
                 <allowspecific>0</allowspecific>
                 <group>skrillpm</group>
             </skrill_amx>
+            <skrill_din>
+                <active>0</active>
+                <show_separately>0</show_separately>
+                <model>skrill/method_din</model>
+                <order_status>pending_payment</order_status>
+                <payment_action>authorize</payment_action>
+                <title>Diners</title>
+                <allowspecific>0</allowspecific>
+                <group>skrillpm</group>
+            </skrill_din>
+            <skrill_jcb>
+                <active>0</active>
+                <show_separately>0</show_separately>
+                <model>skrill/method_jcb</model>
+                <order_status>pending_payment</order_status>
+                <payment_action>authorize</payment_action>
+                <title>JCB</title>
+                <allowspecific>0</allowspecific>
+                <group>skrillpm</group>
+            </skrill_jcb>
             <skrill_gcb>
                 <active>0</active>
                 <show_separately>0</show_separately>
                 <model>skrill/method_gcb</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Carte Bleue by Visa</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>FR</specificcountry>
@@ -310,7 +330,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_dnk</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Dankort by Visa</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>DK</specificcountry>
@@ -321,7 +341,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_psp</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>PostePay by Visa</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>IT</specificcountry>
@@ -332,7 +352,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_csi</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>CartaSi by Visa</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>IT</specificcountry>
@@ -343,7 +363,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_obt</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Skrill Direct (Online Bank Transfer)</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>DE,GB,FR,IT,ES,HU,AT</specificcountry>
@@ -354,7 +374,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_ntl</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Neteller</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>AX,AL,DZ,AS,AD,AO,AI,AQ,AG,AR,AW,AU,AT,AZ,BH,BD,BB,BY,BE,BZ,BJ,BM,BO,BA,BW,BR,BN,BG,BF,BI,KH,CA,CV,KY,CF,TD,CL,CX,CR,CO,KM,CG,HR,CY,CZ,DK,DJ,DM,EC,EG,SV,GQ,EE,ET,FK,FO,FJ,FI,GG,FR,GF,PF,TF,GA,GM,DE,GH,GI,GR,GL,GD,GT,GW,GY,HT,VA,HN,HK,HU,IS,IN,IE,IM,IL,IT,JM,JP,JE,JO,KE,KI,KR,KW,LA,LV,LB,LS,LI,LU,MO,MK,MG,MW,MY,MV,ML,MT,MQ,MR,MU,YT,MX,MD,MC,ME,MA,MZ,NA,NP,NL,AN,NC,NZ,NI,NE,NG,NU,NF,NO,OM,PS,PA,PY,PE,PH,PN,PL,PT,QA,RE,RO,RU,RW,SH,KN,LC,PM,VC,WS,ST,SA,SN,RS,SC,SG,SK,SI,SB,ZA,ES,LK,SR,SJ,SZ,SE,CH,TZ,TH,TG,TK,TO,TT,TN,TR,TC,TV,UA,AE,GB,UY,VU,VE,VN,WF,EH,ZM</specificcountry>
@@ -368,10 +388,10 @@
                 <channel_id></channel_id>
                 <sender></sender>
                 <login></login>
-                <password></password>                               
+                <password></password>
                 <model>skrill/method_gir</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Giropay</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>DE</specificcountry>
@@ -385,10 +405,10 @@
                 <channel_id></channel_id>
                 <sender></sender>
                 <login></login>
-                <password></password>                               
+                <password></password>
                 <model>skrill/method_did</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Direct Debit / ELV</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>DE</specificcountry>
@@ -396,16 +416,16 @@
             </skrill_did>
             <skrill_sft>
                 <active>0</active>
-                <gateway>SKRILL</gateway>                
+                <gateway>SKRILL</gateway>
                 <show_separately>0</show_separately>
                 <server_mode>TEST</server_mode>
                 <channel_id></channel_id>
                 <sender></sender>
                 <login></login>
-                <password></password>                                               
+                <password></password>
                 <model>skrill/method_sft</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Sofortueberweisung</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>DE,AT,BE,NL,IT,FR,PL,GB</specificcountry>
@@ -416,7 +436,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_ebt</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Nordea Solo</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>SE</specificcountry>
@@ -424,16 +444,16 @@
             </skrill_ebt>
             <skrill_idl>
                 <active>0</active>
-                <gateway>SKRILL</gateway>                
+                <gateway>SKRILL</gateway>
                 <show_separately>0</show_separately>
                 <server_mode>TEST</server_mode>
                 <channel_id></channel_id>
                 <sender></sender>
                 <login></login>
-                <password></password>                                               
+                <password></password>
                 <model>skrill/method_idl</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>iDEAL</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>NL</specificcountry>
@@ -447,10 +467,10 @@
                 <channel_id></channel_id>
                 <sender></sender>
                 <login></login>
-                <password></password>                                               
+                <password></password>
                 <model>skrill/method_npy</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>EPS (Netpay)</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>AT</specificcountry>
@@ -461,7 +481,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_pli</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>POLi</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>AU</specificcountry>
@@ -472,7 +492,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_pwy</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Przelewy24</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>PL</specificcountry>
@@ -483,7 +503,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_epy</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                         
+                <payment_action>authorize</payment_action>
                 <title>ePay.bg</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>BG</specificcountry>
@@ -494,7 +514,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_glu</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Trustly</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>SE,FI,EE,DK,ES,PL,IT,FR,DE,PT,AT,LV,LT,NL</specificcountry>
@@ -505,7 +525,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_ali</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>
                 <title>Alipay</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>CN</specificcountry>
@@ -515,7 +535,7 @@
                 <active>1</active>
                 <model>skrill/method_creditcard</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>              
+                <payment_action>authorize</payment_action>
                 <title>Credit Card (Enterprise)</title>
                 <group>skrillpm</group>
             </skrill_creditcard>
@@ -523,25 +543,25 @@
                 <active>1</active>
                 <model>skrill/method_directdebit</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>				
+                <payment_action>authorize</payment_action>
                 <title>Lastschrift (ELV) (Enterprise)</title>
-                <group>skrillpm</group>				
-            </skrill_directdebit>           
+                <group>skrillpm</group>
+            </skrill_directdebit>
             <skrill_eps>
                 <active>1</active>
                 <model>skrill/method_eps</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
                 <title>eps (Enterprise)</title>
-                <group>skrillpm</group>				
-            </skrill_eps>			
+                <group>skrillpm</group>
+            </skrill_eps>
             <skrill_giropay>
                 <active>1</active>
                 <model>skrill/method_giropay</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
                 <title>giropay (Enterprise)</title>
-                <group>skrillpm</group>				
+                <group>skrillpm</group>
             </skrill_giropay>
             <skrill_ideal>
                 <active>1</active>
@@ -549,7 +569,7 @@
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
                 <title>iDeal (Enterprise)</title>
-                <group>skrillpm</group>				
+                <group>skrillpm</group>
             </skrill_ideal>
             <!-- <skrill_paypal>
                 <active>0</active>
@@ -563,16 +583,16 @@
 				<sender></sender>
 				<login></login>
 				<password></password>
-                <group>skrillpm</group>				
-            </skrill_paypal> -->           
+                <group>skrillpm</group>
+            </skrill_paypal> -->
             <skrill_sofortuberweisung>
                 <active>1</active>
                 <model>skrill/method_sofortuberweisung</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
                 <title>SOFORT Ü‎berweisung (Enterprise)</title>
-                <group>skrillpm</group>				
-            </skrill_sofortuberweisung>			
+                <group>skrillpm</group>
+            </skrill_sofortuberweisung>
             <!-- <skrill_payolutioninv>
                 <active>0</active>
                 <gateway>PAYON</gateway>
@@ -585,8 +605,8 @@
                 <sender></sender>
                 <login></login>
                 <password></password>
-                <group>skrillpm</group>             
-            </skrill_payolutioninv>          
+                <group>skrillpm</group>
+            </skrill_payolutioninv>
             <skrill_payolutionins>
                 <active>0</active>
                 <gateway>PAYON</gateway>
@@ -599,8 +619,8 @@
                 <sender></sender>
                 <login></login>
                 <password></password>
-                <group>skrillpm</group>             
-            </skrill_payolutionins> -->          
+                <group>skrillpm</group>
+            </skrill_payolutionins> -->
             <skrill_paysafecard>
                 <active>1</active>
                 <model>skrill/method_paysafecard</model>
@@ -608,10 +628,10 @@
                 <payment_action>authorize</payment_action>
                 <title>Paysafecard (Enterprise)</title>
                 <group>skrillpm</group>
-            </skrill_paysafecard>           
+            </skrill_paysafecard>
             <!-- <skrill_paytrail>
                 <active>0</active>
-                <gateway>PAYON</gateway>                
+                <gateway>PAYON</gateway>
                 <model>skrill/method_paytrail</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
@@ -621,11 +641,11 @@
                 <sender></sender>
                 <login></login>
                 <password></password>
-                <group>skrillpm</group>             
-            </skrill_paytrail> -->           
+                <group>skrillpm</group>
+            </skrill_paytrail> -->
             <!-- <skrill_yandex>
                 <active>0</active>
-                <gateway>PAYON</gateway>                
+                <gateway>PAYON</gateway>
                 <model>skrill/method_yandex</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
@@ -635,8 +655,8 @@
                 <sender></sender>
                 <login></login>
                 <password></password>
-                <group>skrillpm</group>             
-            </skrill_yandex> -->                                   
+                <group>skrillpm</group>
+            </skrill_yandex> -->
         </payment>
     </default>
 

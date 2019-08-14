@@ -22,10 +22,16 @@
  * Abstract payment model
  *
  */
- 
+
 abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abstract
 {
-    
+    const PROCESSED_STATUS = '2';
+    const PENDING_STATUS = '0';
+    const FAILED_STATUS = '-2';
+    const REFUNDED_STATUS = '-4';
+    const REFUNDFAILED_STATUS = '-5';
+    const REFUNDPENDING_STATUS = '-6';
+
     /**
      * Is method a gateaway
      *
@@ -46,7 +52,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
      * @var boolean
      */
     protected $_canUseForMultishipping = false;
-    
+
     /**
      * Is a initalize needed
      *
@@ -63,7 +69,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
     /**
      * Payment Title
      *
-     * @var type
+     * @var string
      */
     protected $_methodTitle = '';
 
@@ -74,11 +80,6 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
      */
     protected $_code = 'skrill_abstract';
 
-    /**
-     * Redirect or iFrame
-     * @var type 
-     */
-    
     protected $_canCapture = true;
     protected $_canRefund = true;
     protected $_canRefundInvoicePartial = true;
@@ -98,8 +99,10 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
                     case 'skrill_vsa':
                     case 'skrill_msc':
                     case 'skrill_amx':
+                    case 'skrill_din':
+                    case 'skrill_jcb':
                         $this->_canUseCheckout = false;
-                        break;                    
+                        break;
                     default:
                         # code...
                         break;
@@ -110,7 +113,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
             $this->_canUseCheckout = false;
 
         $order = Mage::getSingleton('checkout/session')->getQuote();
-        
+
         if ( $this->isCountryNotSupport($order) && $this->_canUseCheckout )
             $this->_canUseCheckout = false;
     }
@@ -139,7 +142,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         }
         return $order->getReservedOrderId();
     }
-    
+
     /**
      * Retrieve the settings
      *
@@ -215,38 +218,24 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
             return false;
     }
 
-    public function getSid($fields)
+    public function getSid($parameters)
     {
         $url = 'https://pay.skrill.com';
 
-        $fields_string = http_build_query($fields);
+        $request = http_build_query($parameters, '', '&');
 
-        $curl = curl_init();
-        curl_setopt($curl,CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($curl, CURLINFO_HEADER_OUT, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: application/x-www-form-urlencoded;charset=UTF-8'));
-        curl_setopt($curl, CURLOPT_FAILONERROR, 1);
-        curl_setopt($curl,CURLOPT_POST, count($fields));
-        curl_setopt($curl,CURLOPT_POSTFIELDS, $fields_string);
+        $response = Mage::helper('skrill/curl')->sendRequest($url, $request);
 
-        $result = curl_exec($curl);
-        
-        Mage::log('get sid log: ', $result, 'skrill_log_file.log'); 
-        
-        if(curl_errno($curl)) {
-            throw new Exception("Curl error: ". curl_error($curl));
-        }
-        curl_close($curl);
+        Mage::log('get sid request', null, 'skrill_log_file.log');
+        Mage::log($parameters, null, 'skrill_log_file.log');
+        Mage::log('get sid response : '.$response, null, 'skrill_log_file.log');
 
-        return $result;
+        return $response;
     }
 
     public function getPaymentMethods()
     {
-        $payment_methods = "WLT,PSC,ACC,VSA,MSC,VSD,VSE,MAE,AMX,GCB,DNK,PSP,CSI,OBT,GIR,DID,SFT,EBT,IDL,NPY,PLI,PWY,EPY,GLU,ALI,NTL";
+        $payment_methods = "WLT,PSC,ACC,VSA,MSC,VSD,VSE,MAE,AMX,DIN,JCB,GCB,DNK,PSP,CSI,OBT,GIR,DID,SFT,EBT,IDL,NPY,PLI,PWY,EPY,GLU,ALI,NTL";
         $pm_list = explode(",", $payment_methods);
         $list = '';
         foreach ($pm_list as $key => $pm) {
@@ -268,13 +257,21 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
             )
         );
 
-        $statusUrls = explode(':', $statusUrl);
+        return $statusUrl;
+    }
 
-        if ($statusUrls[0] == 'https') {
-            return $statusUrl;
-        }
+    protected function getRefundStatusUrl($orderId)
+    {
+        $refundStatusUrl = Mage::getUrl(
+            'skrill/payment/handleRefundStatusResponse/',
+            array(
+                'orderId' => $orderId,
+                'paymentMethod' => $this->getCode(),
+                '_secure' => true
+            )
+        );
 
-        return false;
+        return $refundStatusUrl;
     }
 
     /**
@@ -302,10 +299,10 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         )
         ."?orderId=".urlencode($this->getOrderIncrementId())
         ."&paymentMethod=".$this->getCode();
-        if ($this->getStatusUrl()) {
-            $postParameters['status_url'] = $this->getStatusUrl();
+        $postParameters['status_url'] = $this->getStatusUrl();
+        if (isset($settings['merchant_email'])) {
+            $postParameters['status_url2'] = $settings['merchant_email'];
         }
-        $postParameters['status_url2'] = $settings['merchant_email'];
         $postParameters['cancel_url'] = Mage::getUrl('skrill/payment/cancelResponse',array('_secure'=>true));
         $postParameters['language'] = $this->getLanguage();
         $postParameters['logo_url'] = $settings['logo_url'];
@@ -317,8 +314,8 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         $postParameters['postal_code'] = $address['zip'];
         $postParameters['city'] = $address['city'];
         $postParameters['country'] = Mage::helper('skrill')->getCountryIso3($address['country_code']);
-        $postParameters['amount'] = $basket['amount'];
-        $postParameters['currency'] = Mage::app()->getStore()->getCurrentCurrencyCode();
+        $postParameters['amount'] = $basket['baseAmount'];
+        $postParameters['currency'] = $basket['baseCurrency'];
         $postParameters['detail1_description'] = "Order pay from ".$contact['email'];
         $postParameters['merchant_fields'] = 'Platform';
         $postParameters['Platform'] = '71422537';
@@ -331,7 +328,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         } catch (Exception $e) {
             Mage::throwException(Mage::helper('skrill')->__('ERROR_GENERAL_REDIRECT'));
         }
-        
+
         if (!$sid)
             Mage::throwException(Mage::helper('skrill')->__('ERROR_GENERAL_REDIRECT'));
 
@@ -346,7 +343,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
 
     public function getLanguage(){
 
-        $langs = Mage::helper('skrill')->getLocaleIsoCode(); 
+        $langs = Mage::helper('skrill')->getLocaleIsoCode();
         switch ($langs) {
             case 'de':
               $lang = 'DE';
@@ -356,53 +353,76 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
               $lang='EN';
         }
 
-        return $lang;   
+        return $lang;
     }
-    
+
     public function capture(Varien_Object $payment, $amount)
     {
         $payment->setStatus('APPROVED')
                 ->setTransactionId($payment->getAdditionalInformation('skrill_mb_transaction_id'))
-                ->setIsTransactionClosed(1)->save();            
+                ->setIsTransactionClosed(1)->save();
 
         return $this;
     }
-    
+
     public function processInvoice($invoice, $payment)
     {
-        $invoice->setTransactionId($payment->getLastTransId());
-        $invoice->save(); 
+        $invoice->setTransactionId($payment->getLastTransId())->save();
         $invoice->sendEmail();
+        $payment->getOrder()->setState(Mage_Sales_Model_Order::STATE_PROCESSING, 'payment_accepted')->save();
         return $this;
     }
 
     public function refund(Varien_Object $payment, $amount)
     {
+        if ($payment->getAdditionalInformation('skrill_refund_status') == self::REFUNDPENDING_STATUS) {
+            Mage::throwException(Mage::helper('skrill')->__('BACKEND_GENERAL_WAIT_REFUND_PENDING'));
+        }
+
+        $orderId = $payment->getOrder()->getIncrementId();
         $params['mb_transaction_id'] = $payment->getAdditionalInformation('skrill_mb_transaction_id');
         $params['amount'] = $amount;
+        $params['refund_status_url'] = $this->getRefundStatusUrl($orderId);
+
+        Mage::log('refund prepare request', null, 'skrill_log_file.log');
+        Mage::log($params, null, 'skrill_log_file.log');
 
         $xml_result = Mage::helper('skrill')->doRefund('prepare', $params);
+
+        Mage::log('refund prepare response : '.Zend_Debug::dump($xml_result, null, false), null, 'skrill_log_file.log');
 
         $sid = (string) $xml_result->sid;
 
         $xml_result = Mage::helper('skrill')->doRefund('refund', $sid);
 
+        Mage::log('refund response with sid '.$sid.' : '.Zend_Debug::dump($xml_result, null, false), null, 'skrill_log_file.log');
+
         $status = (string) $xml_result->status;
         $mb_trans_id = (string) $xml_result->mb_transaction_id;
 
-        if ($status == '2') {    
-            $payment->setAdditionalInformation('skrill_status', "-4");
+        if ($status == self::PROCESSED_STATUS) {
+            $payment->setAdditionalInformation('skrill_refund_status', self::REFUNDED_STATUS);
             $payment->setTransactionId($mb_trans_id)
                     ->setIsTransactionClosed(1)->save();
-        } else {
-            $response['status'] = "-5";
+            $response['status'] = self::REFUNDED_STATUS;
             $comment = Mage::helper('skrill')->getComment($response);
-            $payment->getOrder()->addStatusHistoryComment($comment, false)->save();            
-            Mage::throwException(Mage::helper('skrill')->__('ERROR_GENERAL_PROCESSING'));
+            $payment->getOrder()->addStatusHistoryComment($comment, false)->save();
+        } elseif ($status == self::PENDING_STATUS) {
+            $payment->setAdditionalInformation('skrill_refund_status', self::REFUNDPENDING_STATUS)->save();
+            $response['status'] = self::REFUNDPENDING_STATUS;
+            $comment = Mage::helper('skrill')->getComment($response);
+            $payment->getOrder()->addStatusHistoryComment($comment, false)->save();
+            Mage::throwException(Mage::helper('skrill')->__('SUCCESS_GENERAL_REFUND_PAYMENT_PENDING'));
+        } else {
+            $payment->setAdditionalInformation('skrill_refund_status', self::REFUNDFAILED_STATUS)->save();
+            $response['status'] = self::REFUNDFAILED_STATUS;
+            $comment = Mage::helper('skrill')->getComment($response);
+            $payment->getOrder()->addStatusHistoryComment($comment, false)->save();
+            Mage::throwException(Mage::helper('skrill')->__('ERROR_GENERAL_REFUND_PAYMENT'));
         }
-            
+
         return $this;
-    }   
+    }
 
     /**
      *
@@ -422,6 +442,6 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
     {
         return Mage::helper('skrill')->__($this->_methodTitle);
     }
-    
+
 }
 
