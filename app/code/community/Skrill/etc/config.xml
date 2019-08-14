@@ -22,7 +22,7 @@
 <config>
     <modules>
         <Skrill>
-            <version>1.0.31</version>
+            <version>1.0.32</version>
         </Skrill>
     </modules>
 
@@ -175,7 +175,7 @@
     <default>
         <payment>
             <skrill_settings>
-                <version>1.0.31</version>
+                <version>1.0.32</version>
                 <merchant_id></merchant_id>
                 <merchant_account></merchant_account>
                 <recipient_desc></recipient_desc>
@@ -692,7 +692,7 @@
                 <payment_action>authorize</payment_action>
                 <title>Trustly</title>
                 <allowspecific>1</allowspecific>
-                <specificcountry>AR,BR,CL,CO,MX,UY</specificcountry>
+                <specificcountry>AR,BR,CL,CO,MX,PE,UY</specificcountry>
                 <group>skrillpm</group>
             </skrill_aci>
             <skrill_aup>
