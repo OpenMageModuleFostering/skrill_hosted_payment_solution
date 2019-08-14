@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+
+    <default>
+
+        <!-- Mage_Checkout -->
+        <reference name="top.links">
+            <block type="checkout/links" name="checkout_cart_link">
+                <action method="addCartLink"></action>
+                <action method="addCheckoutLink"></action>
+            </block>
+        </reference>
+
+        <reference name="header">
+            <block type="checkout/cart_minicart" name="minicart_head" template="checkout/cart/minicart.phtml" before="-">
+                <block type="checkout/cart_sidebar" name="minicart_content" template="checkout/cart/minicart/items.phtml">
+                    <action method="addItemRender"><type>default</type><block>checkout/cart_item_renderer</block><template>checkout/cart/minicart/skrill/default.phtml</template></action>
+                    <action method="addItemRender"><type>simple</type><block>checkout/cart_item_renderer</block><template>checkout/cart/minicart/skrill/default.phtml</template></action>
+                    <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/cart/minicart/skrill/default.phtml</template></action>
+                    <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>checkout/cart/minicart/skrill/default.phtml</template></action>
+
+                    <block type="core/text_list" name="cart_sidebar.cart_promotion" as="cart_promotion" translate="label" module="checkout">
+                        <label>Mini-cart promotion block</label>
+                    </block>
+                    <block type="core/text_list" name="cart_sidebar.extra_actions" as="extra_actions" translate="label" module="checkout">
+                        <label>Shopping Cart Sidebar Extra Actions</label>
+                    </block>
+                </block>
+            </block>
+        </reference>
+
+        <reference name="right">
+            <!--<block type="checkout/cart_sidebar" name="cart_sidebar" template="checkout/cart/sidebar.phtml" before="-">-->
+                <!--<action method="addItemRender"><type>simple</type><block>checkout/cart_item_renderer</block><template>checkout/cart/sidebar/default.phtml</template></action>-->
+                <!--<action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/cart/sidebar/default.phtml</template></action>-->
+                <!--<action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>checkout/cart/sidebar/default.phtml</template></action>-->
+                <!--<block type="core/text_list" name="cart_sidebar.extra_actions" as="extra_actions" translate="label" module="checkout">-->
+                    <!--<label>Shopping Cart Sidebar Extra Actions</label>-->
+                <!--</block>-->
+            <!--</block>-->
+        </reference>
+    </default>
+
+    <!--
+    One page checkout payment methods block
+    -->
+    <checkout_onepage_paymentmethod>
+        <remove name="right"/>
+        <remove name="left"/>
+
+        <block type="checkout/onepage_payment_methods" name="root" output="toHtml" template="checkout/onepage/payment/skrill/methods.phtml">
+            <action method="setMethodFormTemplate"><method>purchaseorder</method><template>payment/form/purchaseorder.phtml</template></action>
+            <block type="core/template" name="checkout.onepage.payment.methods.scripts" as="scripts" />
+            <block type="core/template" name="checkout.onepage.payment.methods.additional" as="additional" />
+        </block>
+    </checkout_onepage_paymentmethod>
+
+</layout>

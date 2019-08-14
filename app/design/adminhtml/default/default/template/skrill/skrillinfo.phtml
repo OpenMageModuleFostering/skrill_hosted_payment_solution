@@ -1,0 +1,49 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2014 Skrill
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+?>
+<?php 
+    echo $this->escapeHtml($this->getMethod()->getTitle())." ".Mage::helper('skrill')->__('BACKEND_TT_BY_SKRILL'); 
+?>
+<br />
+<?php 
+	$ip_country = $this->getInfo()->getAdditionalInformation('skrill_ip_country');
+	$transaction_id = $this->getInfo()->getAdditionalInformation('skrill_transaction_id');
+ 	if ($transaction_id)
+ 		echo Mage::helper('skrill')->__('BACKEND_GENERAL_PAYMENT_ID').": ".$transaction_id."<br />";
+	if ( $ip_country )
+		echo Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_ORIGIN').": ".Mage::app()->getLocale()->getCountryTranslation($ip_country)."<br />";
+?>
+<?php 
+	$response['status'] = $this->getInfo()->getAdditionalInformation('skrill_status');
+	$response['payment_type'] = $this->getInfo()->getAdditionalInformation('skrill_payment_type');
+	$response['payment_instrument_country'] = $this->getInfo()->getAdditionalInformation('skrill_issuer_country');
+
+	$separator_type = 'info';
+    $comment = Mage::helper('skrill')->getComment($response,$separator_type);
+	echo $comment;
+?>
+<?php $order = Mage::registry('sales_order'); ?>
+<?php if ($order && $this->getInfo()->getAdditionalInformation('skrill_status') != "-4") { ?>
+<form action="<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/updateorder/index"); ?>" method="post">
+	<input type="hidden" name="order_id" value="<?php echo $order->getId(); ?>"/>
+	<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+	<button style="float:right;" type="submit"><?php echo Mage::helper('skrill')->__('BACKEND_TT_UPDATE_ORDER'); ?></button>
+</form>
+<?php } ?>
