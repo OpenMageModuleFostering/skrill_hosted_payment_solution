@@ -5,7 +5,6 @@ function checkingAllPaymentEnabled() {
 		"amx",
 		"csi",
 		"did",
-		"din",
 		"dnk",
 		"ebt",
 		"ent",
@@ -14,7 +13,7 @@ function checkingAllPaymentEnabled() {
 		"gir",
 		"glu",
 		"idl",
-		"jcb",
+                "ntl",
 		"mae",
 		"msc",
 		"npy",
@@ -42,9 +41,7 @@ function checkingAllCardEnabled() {
 	var list_cards = [
 		"vsa",
 		"msc",
-		"amx",
-		"din",
-		"jcb"
+		"amx"
 	];
 	for(i=0; i<list_cards.length;i++){
 		if (acc_active == 1 && acc_separately == 1)

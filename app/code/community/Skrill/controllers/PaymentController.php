@@ -178,9 +178,7 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
     protected function isFraud($order, $response)
     {
         if ($response['amount']) {
-            $grandTotal = $this->setNumberFormat($order->getGrandTotal());
-            $amount = $this->setNumberFormat($response['amount']);
-            return !( ($grandTotal == $amount) && ($response['md5sig'] == $this->generateMd5sig($order, $response)) );
+            return !($response['md5sig'] == $this->generateMd5sig($order, $response));
         } else {
             return false;
         }

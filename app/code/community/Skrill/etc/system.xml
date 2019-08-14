@@ -307,7 +307,7 @@
                         </version> -->
                         <active translate="label">
                             <label>BACKEND_CH_ACTIVE</label>
-                            <comment>American Samoa, Austria, Belgium, Canada, Croatia, Cyprus, Czech Republic, Denmark, Finland, France, Germany, Greece, Guam, Hungary, Ireland, Italy, Latvia, Luxembourg, Malta, Mexico, Netherlands, Northern Mariana Islands, Norway, Poland, Portugal, Puerto Rico, Romania, Slovakia, Slovenia, Spain, Sweden, Switzerland, Turkey, United Kingdom, United States Of America and US Virgin Islands</comment>
+                            <comment>American Samoa, Austria, Belgium, Canada, Croatia, Cyprus, Czech Republic, Denmark, Finland, France, Germany, Guam, Hungary, Ireland, Italy, Latvia, Luxembourg, Malta, Mexico, Netherlands, Northern Mariana Islands, Norway, Poland, Portugal, Puerto Rico, Romania, Slovakia, Slovenia, Spain, Sweden, Switzerland, Turkey, United Kingdom, United States Of America and US Virgin Islands</comment>
                             <sort_order>2</sort_order>
                             <frontend_type>select</frontend_type>
                             <config_path>payment/skrill_psc/active</config_path>
@@ -795,105 +795,7 @@
                             <show_in_store>1</show_in_store>
                         </sort_order>
                     </fields>
-                </skrill_amx>                       
-                <skrill_din translate="label">
-                    <label>SKRILL_BACKEND_PM_DIN</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>110</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>1</show_in_store>
-                    <fields>
-                        <!-- <version>
-                            <label>v1.0.21</label>
-                            <sort_order>1</sort_order>
-                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <frontend_type>label</frontend_type>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </version> -->
-                        <active translate="label">
-                            <label>BACKEND_CH_ACTIVE</label>
-                            <comment>All Countries</comment>                            
-                            <sort_order>2</sort_order>
-                            <frontend_type>select</frontend_type>
-                            <config_path>payment/skrill_din/active</config_path>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </active>
-                        <show_separately translate="label">
-                            <label>SKRILL_BACKEND_PM_MODE</label>
-                            <sort_order>3</sort_order>
-                            <frontend_type>select</frontend_type>
-                            <config_path>payment/skrill_din/show_separately</config_path>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </show_separately>
-                        <sort_order translate="label">
-                            <label>BACKEND_CH_ORDER</label>
-                            <frontend_type>text</frontend_type>
-                            <config_path>payment/skrill_din/sort_order</config_path>
-                            <sort_order>6</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </sort_order>
-                    </fields>
-                </skrill_din>                       
-                <skrill_jcb translate="label">
-                    <label>SKRILL_BACKEND_PM_JCB</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>111</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>1</show_in_store>
-                    <fields>
-                        <!-- <version>
-                            <label>v1.0.21</label>
-                            <sort_order>1</sort_order>
-                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <frontend_type>label</frontend_type>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </version> -->
-                        <active translate="label">
-                            <label>BACKEND_CH_ACTIVE</label>
-                            <comment>All Countries</comment>
-                            <sort_order>2</sort_order>
-                            <frontend_type>select</frontend_type>
-                            <config_path>payment/skrill_jcb/active</config_path>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </active>
-                        <show_separately translate="label">
-                            <label>SKRILL_BACKEND_PM_MODE</label>
-                            <sort_order>3</sort_order>
-                            <frontend_type>select</frontend_type>
-                            <config_path>payment/skrill_jcb/show_separately</config_path>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </show_separately>
-                        <sort_order translate="label">
-                            <label>BACKEND_CH_ORDER</label>
-                            <frontend_type>text</frontend_type>
-                            <config_path>payment/skrill_jcb/sort_order</config_path>
-                            <sort_order>6</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </sort_order>
-                    </fields>
-                </skrill_jcb>                       
+                </skrill_amx>                                                                    
                 <skrill_gcb translate="label">
                     <label>SKRILL_BACKEND_PM_GCB</label>
                     <frontend_type>text</frontend_type>
@@ -1138,7 +1040,56 @@
                             <show_in_store>1</show_in_store>
                         </sort_order>
                     </fields>
-                </skrill_obt>                       
+                </skrill_obt>
+                <skrill_ntl translate="label">
+                    <label>SKRILL_BACKEND_PM_NTL</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>127</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <!-- <version>
+                            <label>v1.0.6</label>
+                            <sort_order>1</sort_order>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <frontend_type>label</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </version> -->
+                        <active translate="label">
+                            <label>BACKEND_CH_ACTIVE</label>
+                            <comment>All except for Afghanistan, Armenia, Bhutan, Bouvet Island, Myanmar, China, (Keeling) Islands, Democratic Republic of Congo, Cook Islands, Cuba, Eritrea, South Georgia and the South Sandwich Islands, Guam, Guinea, Territory of Heard Island and McDonald Islands, Iran, Iraq, Cote d'Ivoire, Kazakhstan, North Korea, Kyrgyzstan, Liberia, Libya, Mongolia, Northern Mariana Islands, Federated States of Micronesia, Marshall Islands, Palau, Pakistan, East Timor, Puerto Rico, Sierra Leone, Somalia, Zimbabwe, Sudan, Syria, Tajikistan, Turkmenistan, Uganda, United States, US Virgin Islands, Uzbekistan, and Yemen</comment>
+                            <sort_order>2</sort_order>
+                            <frontend_type>select</frontend_type>
+                            <config_path>payment/skrill_ntl/active</config_path>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <show_separately translate="label">
+                            <label>SKRILL_BACKEND_PM_MODE</label>
+                            <sort_order>3</sort_order>
+                            <frontend_type>select</frontend_type>
+                            <config_path>payment/skrill_ntl/show_separately</config_path>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_separately>
+                        <sort_order translate="label">
+                            <label>BACKEND_CH_ORDER</label>
+                            <frontend_type>text</frontend_type>
+                            <config_path>payment/skrill_ntl/sort_order</config_path>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sort_order>
+                    </fields>
+                </skrill_ntl>                         
                 <skrill_gir translate="label">
                     <label>SKRILL_BACKEND_PM_GIR</label>
                     <frontend_type>text</frontend_type>

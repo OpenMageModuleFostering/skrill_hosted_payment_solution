@@ -98,8 +98,6 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
                     case 'skrill_vsa':
                     case 'skrill_msc':
                     case 'skrill_amx':
-                    case 'skrill_din':
-                    case 'skrill_jcb':
                         $this->_canUseCheckout = false;
                         break;                    
                     default:
@@ -235,7 +233,9 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         curl_setopt($curl,CURLOPT_POSTFIELDS, $fields_string);
 
         $result = curl_exec($curl);
-
+        
+        Mage::log('get sid log: ', $result, 'skrill_log_file.log'); 
+        
         if(curl_errno($curl)) {
             throw new Exception("Curl error: ". curl_error($curl));
         }
@@ -246,7 +246,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
 
     public function getPaymentMethods()
     {
-        $payment_methods = "WLT,PSC,ACC,VSA,MSC,VSD,VSE,MAE,AMX,DIN,JCB,GCB,DNK,PSP,CSI,OBT,GIR,DID,SFT,EBT,IDL,NPY,PLI,PWY,EPY,GLU,ALI";
+        $payment_methods = "WLT,PSC,ACC,VSA,MSC,VSD,VSE,MAE,AMX,GCB,DNK,PSP,CSI,OBT,GIR,DID,SFT,EBT,IDL,NPY,PLI,PWY,EPY,GLU,ALI,NTL";
         $pm_list = explode(",", $payment_methods);
         $list = '';
         foreach ($pm_list as $key => $pm) {

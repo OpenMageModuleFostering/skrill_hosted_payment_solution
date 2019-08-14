@@ -18,15 +18,15 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-class Skrill_Block_Payment_Form_Obt extends Skrill_Block_Payment_Form_Abstract
+class Skrill_Block_Payment_Form_Ntl extends Skrill_Block_Payment_Form_Abstract
 {
     /**
      * Construct
      */
     protected function _construct()
     {
-        $this->_logoAlt = Mage::helper('skrill')->__('SKRILL_FRONTEND_PM_OBT');
-        $this->_logoUrl = $this->getSkinUrl('images/skrill/obt.png');
+        $this->_logoAlt = Mage::helper('skrill')->__('SKRILL_FRONTEND_PM_NTL');
+        $this->_logoUrl = $this->getSkinUrl('images/skrill/ntl.png');
         parent::_construct();
     }
 
