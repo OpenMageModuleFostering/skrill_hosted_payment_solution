@@ -22,22 +22,9 @@
 <config>
     <modules>
         <Skrill>
-            <version>1.0.24</version>
+            <version>1.0.25</version>
         </Skrill>
     </modules>
-
-    <stores>
-        <admin>
-            <design>
-                <package>
-                    <name>default</name>
-                </package>
-                <theme>
-                    <default>Skrill</default>
-                </theme>
-            </design>
-        </admin>
-    </stores>
 
     <global>
         <helpers>
@@ -63,17 +50,6 @@
                 <class>Skrill_Block</class>
             </skrill>
         </blocks>
-        <events>
-            <sales_model_service_quote_submit_success>
-                <observers>
-                    <skrill_success_observer>
-                        <type>model</type>
-                        <class>Skrill_Model_Success_Observer</class>
-                        <method>activateQuote</method>
-                    </skrill_success_observer>
-                </observers>
-            </sales_model_service_quote_submit_success>
-        </events>
         <sales>
             <order>
                 <statuses>
@@ -165,12 +141,44 @@
                 </skrill_checkout>
             </updates>
         </layout>
+        <events>
+            <sales_model_service_quote_submit_success>
+                <observers>
+                    <skrill_success_observer>
+                        <type>model</type>
+                        <class>Skrill_Model_Success_Observer</class>
+                        <method>activateQuote</method>
+                    </skrill_success_observer>
+                </observers>
+            </sales_model_service_quote_submit_success>
+        </events>
     </frontend>
+
+    <adminhtml>
+        <layout>
+            <updates>
+                <skrill_system_config>
+                    <file>skrill/system_config.xml</file>
+                </skrill_system_config>
+            </updates>
+        </layout>
+        <events>
+            <admin_system_config_section_save_after>
+                <observers>
+                    <skrill_config_observer>
+                        <type>model</type>
+                        <class>Skrill_Model_Config_Observer</class>
+                        <method>saveConfig</method>
+                    </skrill_config_observer>
+                </observers>
+            </admin_system_config_section_save_after>
+        </events>
+    </adminhtml>
 
     <default>
         <payment>
             <skrill_settings>
-                <version>1.0.24</version>
+                <version>1.0.25</version>
                 <merchant_id></merchant_id>
                 <merchant_account></merchant_account>
                 <recipient_desc></recipient_desc>

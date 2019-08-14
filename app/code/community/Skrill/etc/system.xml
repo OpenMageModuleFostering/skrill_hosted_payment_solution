@@ -39,7 +39,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -151,7 +151,7 @@
                     <sort_order>99</sort_order>
                     <fields>
                         <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -208,7 +208,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -247,7 +247,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -296,7 +296,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -423,7 +423,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -559,7 +559,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -608,7 +608,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -657,7 +657,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -706,7 +706,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -755,7 +755,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -804,7 +804,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -853,7 +853,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -902,7 +902,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -951,7 +951,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1000,7 +1000,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1049,7 +1049,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1098,7 +1098,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1196,7 +1196,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1322,7 +1322,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1448,7 +1448,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1574,7 +1574,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1623,7 +1623,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1749,7 +1749,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1875,7 +1875,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1924,7 +1924,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1973,7 +1973,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -2022,7 +2022,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -2071,7 +2071,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -2120,7 +2120,7 @@
                     <sort_order>1600</sort_order>
                     <fields>
                         <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -2234,7 +2234,7 @@
                     <sort_order>1800</sort_order>
                     <fields>
                         <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -2348,7 +2348,7 @@
                     <sort_order>1900</sort_order>
                     <fields>
                         <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -2462,7 +2462,7 @@
                     <sort_order>2000</sort_order>
                     <fields>
                         <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -2575,7 +2575,7 @@
                     <sort_order>2100</sort_order>
                     <fields>
                         <version>
-                            <label>v1.0.24</label>
+                            <label>v1.0.25</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>

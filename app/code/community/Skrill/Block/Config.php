@@ -18,25 +18,20 @@
  * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-/**
- * Order success observer
- *
- */
-class Skrill_Model_Success_Observer
+class Skrill_Block_Config extends Mage_Adminhtml_Block_Template
 {
     /**
-     * Reactivate the cart because the order isn't finished
+     * Prepare html output
      *
-     * @param Varien_Event_Observer $observer
+     * @return string
      */
-    public function activateQuote(Varien_Event_Observer $observer)
+    protected function _toHtml()
     {
-    	$quote = $observer->getEvent()->getQuote();
-        $paymentMethod = $quote->getPayment()->getMethod();
-
-        if (strpos($paymentMethod, 'skrill') !== false) {
-        	$quote->setIsActive(true)->save();
+        $section = $this->getAction()->getRequest()->getParam('section', false);
+        if ($section == 'skrill') {
+            return parent::_toHtml();
+        } else {
+            return '';
         }
     }
 }
-
