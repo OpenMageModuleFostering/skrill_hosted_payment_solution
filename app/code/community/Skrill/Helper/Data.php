@@ -532,6 +532,25 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
 
     }
 
+    public function getStatusTrn($parameters)
+    {
+        // check status_trn 3 times if no response.
+        for ($i=0; $i < 3; $i++) { 
+            $response = true;
+            try {
+                $result = $this->doQuery('status_trn', $parameters);
+            } catch (Exception $e) {
+                $response = false;
+            }
+            if ($response && $result)
+            {
+                return $this->getResponseArray($result);
+                break;
+            }
+        }
+        return false;
+    }
+
     public function getResponseArray($strings)
     {
         $response_array = array();

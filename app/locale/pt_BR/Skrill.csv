@@ -247,3 +247,5 @@
 "SKRILL_ERROR_80", "Fraud engine declined"
 "SKRILL_ERROR_98", "Error in communication with provider"
 "SKRILL_ERROR_99_GENERAL", "Failure reason not specified"
+"SKRILL_BACKEND_MERCHANTEMAIL",	"Merchant Email"
+"SKRILL_BACKEND_TT_MERCHANTEMAIL", "Your email address to receive payment notification"

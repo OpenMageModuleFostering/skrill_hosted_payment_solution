@@ -247,3 +247,5 @@
 "SKRILL_ERROR_80", "Transaktion vom Sicherheitssystem zur&uuml;ckgewiesen"
 "SKRILL_ERROR_98", "Fehler bei der Kommunikation mit dem Anbieter"
 "SKRILL_ERROR_99_GENERAL", "Fehlerquelle unbekannt"
+"SKRILL_BACKEND_MERCHANTEMAIL",	"Merchant Email"
+"SKRILL_BACKEND_TT_MERCHANTEMAIL", "Your email address to receive payment notification"

@@ -34,7 +34,7 @@ $installer->run("
         `status` ,
         `state` ,
         `is_default`
-    ) SELECT 'payment_accepted','processing','1' FROM dual WHERE NOT EXISTS (SELECT * FROM `{$this->getTable('sales/order_status_state')}` WHERE `status` = 'payment_accepted' AND `state` = 'processing');	
+    ) SELECT 'payment_accepted','processing','0' FROM dual WHERE NOT EXISTS (SELECT * FROM `{$this->getTable('sales/order_status_state')}` WHERE `status` = 'payment_accepted' AND `state` = 'processing');	
    INSERT INTO  `{$this->getTable('sales/order_status_state')}` (
         `status` ,
         `state` ,

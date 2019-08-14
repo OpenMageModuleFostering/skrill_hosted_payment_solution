@@ -155,7 +155,8 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
             'recipient_desc'    => Mage::getStoreConfig('payment/skrill_settings/recipient_desc', $this->getOrder()->getStoreId()),
             'logo_url'          => urlencode(Mage::getStoreConfig('payment/skrill_settings/logo_url', $this->getOrder()->getStoreId())),
             'api_passwd'        => Mage::getStoreConfig('payment/skrill_settings/api_passwd', $this->getOrder()->getStoreId()),
-            'secret_word'        => Mage::getStoreConfig('payment/skrill_settings/secret_word', $this->getOrder()->getStoreId())
+            'secret_word'        => Mage::getStoreConfig('payment/skrill_settings/secret_word', $this->getOrder()->getStoreId()),
+            'merchant_email'        => Mage::getStoreConfig('payment/skrill_settings/merchant_email', $this->getOrder()->getStoreId())
         );
 
         return $settings;
@@ -256,6 +257,26 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         return rtrim($list,",");
     }
 
+    protected function getStatusUrl()
+    {
+        $statusUrl = Mage::getUrl(
+            'skrill/payment/handleStatusResponse/',
+            array(
+                'orderId' => $this->getOrderIncrementId(),
+                'paymentMethod' => $this->getCode(),
+                '_secure' => true
+            )
+        );
+
+        $statusUrls = explode(':', $statusUrl);
+
+        if ($statusUrls[0] == 'https') {
+            return $statusUrl;
+        }
+
+        return false;
+    }
+
     /**
      * Retrieve the order place URL
      *
@@ -275,9 +296,15 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         $postParameters['pay_to_email'] = $settings['merchant_account'];
         $postParameters['recipient_description'] = $settings['recipient_desc'];
         $postParameters['transaction_id'] = $this->getOrderIncrementId().Mage::helper('skrill')->getDateTime().Mage::helper('skrill')->randomNumber(4);
-        $postParameters['return_url'] = Mage::getUrl('skrill/payment/handleResponse/',array('paymentMethod'=>$this->getCode(), '_secure'=>true));
-        $postParameters['status_url'] = Mage::getUrl('skrill/payment/handleStatusResponse/',array('orderId'=>$this->getOrderIncrementId(), 'paymentMethod'=>$this->getCode(), '_secure'=>true));
-        $postParameters['cancel_url'] = Mage::getUrl('checkout/onepage/',array('_secure'=>true));
+        $postParameters['return_url'] = Mage::getUrl(
+            'skrill/payment/handleResponse/',
+            array('orderId' => $this->getOrderIncrementId(), 'paymentMethod' => $this->getCode(), '_secure' => true)
+        );
+        if ($this->getStatusUrl()) {
+            $postParameters['status_url'] = $this->getStatusUrl();
+        }
+        $postParameters['status_url2'] = $settings['merchant_email'];
+        $postParameters['cancel_url'] = Mage::getUrl('skrill/payment/cancelResponse',array('_secure'=>true));
         $postParameters['language'] = $this->getLanguage();
         $postParameters['logo_url'] = $settings['logo_url'];
         $postParameters['prepare_only'] = 1;
@@ -293,6 +320,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         $postParameters['detail1_description'] = "Order pay from ".$contact['email'];
         $postParameters['merchant_fields'] = 'PlatformID';
         $postParameters['PlatformID'] = '71422537';
+
         if ($this->_code != "skrill_flexible")
             $postParameters['payment_methods'] = $this->getAccountBrand();
 
