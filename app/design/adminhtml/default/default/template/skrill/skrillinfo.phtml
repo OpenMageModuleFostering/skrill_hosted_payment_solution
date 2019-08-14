@@ -39,11 +39,17 @@
     $comment = Mage::helper('skrill')->getComment($response,$separator_type);
 	echo $comment;
 ?>
-<?php $order = Mage::registry('sales_order'); ?>
-<?php if ($order && $this->getInfo()->getAdditionalInformation('skrill_status') != "-4") { ?>
+<?php 
+	$order = Mage::registry('sales_order');
+	if($order) { 
+?>
+<?php if ($order->getStatus() == 'invalid_credential' || $this->getInfo()->getAdditionalInformation('skrill_status') == "0") { ?>
 <form action="<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/updateorder/index"); ?>" method="post">
 	<input type="hidden" name="order_id" value="<?php echo $order->getId(); ?>"/>
 	<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
 	<button style="float:right;" type="submit"><?php echo Mage::helper('skrill')->__('BACKEND_TT_UPDATE_ORDER'); ?></button>
 </form>
-<?php } ?>
+<?php
+		} 
+	}
+?>

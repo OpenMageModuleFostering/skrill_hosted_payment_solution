@@ -38,6 +38,10 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
     protected $jsUrlLive = 'https://ctpe.net/frontend/widget/v3/widget.js?style=card&version=beautified&language=';
     protected $jsUrlTest = 'https://test.ctpe.net/frontend/widget/v3/widget.js?style=card&version=beautified&language=';
 
+    protected $skrillPaymentUrl = 'https://pay.skrill.com';
+    protected $skrillQueryUrl = 'https://www.moneybookers.com/app/query.pl';
+    protected $skrillRefundUrl = 'https://www.moneybookers.com/app/refund.pl';
+
     public function getErrorIdentifier($code)
     {
         $error_messages = array(
@@ -456,14 +460,43 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
 
     // Skrill =====================================
 
+    /**
+     * get skrill payment url
+     *
+     * @return string
+     */
+    public function getSkrillPaymentUrl()
+    {
+        return $this->skrillPaymentUrl;
+    }
+
+    /**
+     * get sid
+     *
+     * @param array $parameters
+     * @return string
+     */
+    public function getSid($parameters)
+    {
+        $url = $this->skrillPaymentUrl;
+
+        $request = http_build_query($parameters, '', '&');
+
+        $response = Mage::helper('skrill/curl')->sendRequest($url, $request);
+
+        Mage::log('get sid request', null, 'skrill_log_file.log');
+        Mage::log($parameters, null, 'skrill_log_file.log');
+        Mage::log('get sid response : '.$response, null, 'skrill_log_file.log');
+
+        return $response;
+    }
+
     public function doQuery($action, $params)
     {
-        $url = 'https://www.moneybookers.com/app/query.pl';
+        $url = $this->skrillQueryUrl;
 
         $fields = $params;
         $fields['action'] = $action;
-        $fields['email'] = Mage::getStoreConfig('payment/skrill_settings/merchant_account');
-        $fields['password'] = Mage::getStoreConfig('payment/skrill_settings/api_passwd');
 
         $request = http_build_query($fields, '', '&');
 
@@ -575,13 +608,11 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function doRefund($action, $params)
     {
-        $url = 'https://www.moneybookers.com/app/refund.pl';
+        $url = $this->skrillRefundUrl;
 
         if ($action == "prepare") {
             $fields = $params;
             $fields['action'] = $action;
-            $fields['email'] = Mage::getStoreConfig('payment/skrill_settings/merchant_account');
-            $fields['password'] = Mage::getStoreConfig('payment/skrill_settings/api_passwd');
         } elseif ($action == "refund") {
             $fields['action'] = $action;
             $fields['sid'] = $params;

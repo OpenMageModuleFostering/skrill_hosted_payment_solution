@@ -144,10 +144,12 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
 
         $isFraud = $this->isFraud($responseStatus);
         Mage::log('is Fraud : '.(int)$isFraud, null, 'skrill_log_file.log');
-        
-        $generatedSignaturedByOrder = $this->generateMd5sigByOrder($order, $responseStatus);
-        $isCredentialValid = $this->isPaymentSignatureEqualsGeneratedSignature($responseStatus['md5sig'], $generatedSignaturedByOrder);
-     
+
+        $method = $order->getPayment()->getMethodInstance();
+
+        $generatedSignatured = $method->generateMd5sigByResponse($responseStatus);
+        $isCredentialValid = $method->isPaymentSignatureEqualsGeneratedSignature($responseStatus['md5sig'], $generatedSignatured);
+
         Mage::log('is credential valid : '.(int)$isCredentialValid, null, 'skrill_log_file.log');
 
         $this->processPayment($order, $responseStatus, $isFraud, $isCredentialValid);
@@ -198,65 +200,6 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
     protected function isFraud($responseStatus)
     {
         return !strtoupper(md5($responseStatus['transaction_id'].$responseStatus['amount'])) == $responseStatus['paymentkey'];
-    }
-
-    /**
-     * check is payment signature equals with value that already generated using order parameters
-     *
-     * @return boolean
-     */
-    protected function isPaymentSignatureEqualsGeneratedSignature($paymentSignature, $generatedSignature)
-    {
-        return $paymentSignature == $generatedSignature;
-    }
-
-    protected function generateMd5sigByOrder($order, $response)
-    {
-        $string = Mage::getStoreConfig('payment/skrill_settings/merchant_id', $order->getStoreId()).
-                $response['transaction_id'].
-                strtoupper(Mage::getStoreConfig('payment/skrill_settings/secret_word', $order->getStoreId())).
-                $response['mb_amount'].
-                $response['mb_currency'].
-                $response['status'];
-        
-        return strtoupper(md5($string));
-    }
-
-    protected function processFraud($order, $responseStatus)
-    {
-        Mage::log('process Fraud', null, 'skrill_log_file.log');
-
-        $comment = Mage::helper('skrill')->getComment($responseStatus);
-        $order->addStatusHistoryComment($comment, false);
-        $order->save();
-
-        $params['mb_transaction_id'] = $responseStatus['mb_transaction_id'];
-        $params['amount'] = $responseStatus['mb_amount'];
-
-        $xmlResult = Mage::helper('skrill')->doRefund('prepare', $params);
-        $sid = (string) $xmlResult->sid;
-        $xmlResult = Mage::helper('skrill')->doRefund('refund', $sid);
-
-        $status = (string) $xmlResult->status;
-        $mbTransactionId = (string) $xmlResult->mb_transaction_id;
-
-        if ($status == Skrill_Model_Method_Skrill::PROCESSED_STATUS) {
-            $responseStatus['status'] = Skrill_Model_Method_Skrill::REFUNDED_STATUS;
-            $order->getPayment()->setAdditionalInformation('skrill_status', $responseStatus['status']);
-            $order->getPayment()->setTransactionId($mbTransactionId)
-                    ->setIsTransactionClosed(1)->save();
-        } else {
-            $responseStatus['status'] = Skrill_Model_Method_Skrill::REFUNDFAILED_STATUS;
-            $order->getPayment()->setAdditionalInformation('skrill_status', $responseStatus['status']);
-            $order->getPayment()->setTransactionId($mbTransactionId)
-                    ->setIsTransactionClosed(0)->save();
-        }
-
-        $comment = Mage::helper('skrill')->getComment($responseStatus,"history","fraud");
-        $order->cancel();
-        $order->setState(Mage_Sales_Model_Order::STATE_PAYMENT_REVIEW, Mage_Sales_Model_Order::STATUS_FRAUD)->save();
-        $order->addStatusHistoryComment($comment, false);
-        $order->save();
     }
 
     protected function processPayment($order, $responseStatus, $isFraud, $isCredentialValid)

@@ -22,7 +22,7 @@
 <config>
     <modules>
         <Skrill>
-            <version>1.0.29</version>
+            <version>1.0.30</version>
         </Skrill>
     </modules>
 
@@ -170,23 +170,12 @@
                 </skrill_system_config>
             </updates>
         </layout>
-        <events>
-            <admin_system_config_section_save_after>
-                <observers>
-                    <skrill_config_observer>
-                        <type>model</type>
-                        <class>Skrill_Model_Config_Observer</class>
-                        <method>saveConfig</method>
-                    </skrill_config_observer>
-                </observers>
-            </admin_system_config_section_save_after>
-        </events>
     </adminhtml>
 
     <default>
         <payment>
             <skrill_settings>
-                <version>1.0.29</version>
+                <version>1.0.30</version>
                 <merchant_id></merchant_id>
                 <merchant_account></merchant_account>
                 <recipient_desc></recipient_desc>

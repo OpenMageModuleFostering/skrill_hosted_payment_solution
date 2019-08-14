@@ -93,19 +93,6 @@ document.addEventListener( 'DOMContentLoaded', function () {
         }
     }
 
-    function initElementClass(){
-        var apiPassword = document.getElementById("skrill_skrill_settings_api_passwd").value;
-        var secretWord = document.getElementById("skrill_skrill_settings_secret_word").value;
-
-        document.getElementById("skrill_skrill_settings_api_passwd").setAttribute('value', '**********');
-        document.getElementById("skrill_skrill_settings_secret_word").setAttribute('value', '**********');
-
-        document.getElementById("skrill_skrill_settings_api_passwd").value = apiPassword;
-        document.getElementById("skrill_skrill_settings_secret_word").value = secretWord;
-
-        checkingAllCardEnabled();
-    }
-
     document.getElementById("skrill_skrill_settings_merchant_account").placeholder = "example@mail.de";
 
     document.getElementById("skrill_skrill_flexible_active").onchange = function(){
@@ -120,7 +107,7 @@ document.addEventListener( 'DOMContentLoaded', function () {
         checkingAllCardEnabled();
     };
 
-    initElementClass();
+    checkingAllCardEnabled();
 }, false );
 //]]>
 </script>
