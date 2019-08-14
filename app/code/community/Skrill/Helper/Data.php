@@ -39,8 +39,8 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
     protected $jsUrlTest = 'https://test.ctpe.net/frontend/widget/v3/widget.js?style=card&version=beautified&language=';
 
     protected $skrillPaymentUrl = 'https://pay.skrill.com';
-    protected $skrillQueryUrl = 'https://www.moneybookers.com/app/query.pl';
-    protected $skrillRefundUrl = 'https://www.moneybookers.com/app/refund.pl';
+    protected $skrillQueryUrl = 'https://www.skrill.com/app/query.pl';
+    protected $skrillRefundUrl = 'https://www.skrill.com/app/refund.pl';
 
     public function getErrorIdentifier($code)
     {
