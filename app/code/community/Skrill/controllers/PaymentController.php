@@ -58,7 +58,7 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
 
     private function generateMd5sig($order, $response)
     {
-        $string = Mage::getStoreConfig('payment/skrill_settings/merchant_id', $order->getStoreId()).$response['transaction_id'].strtoupper(md5(Mage::getStoreConfig('payment/skrill_settings/secret_word', $order->getStoreId()))).$response['mb_amount'].$response['mb_currency'].$response['status'];
+        $string = Mage::getStoreConfig('payment/skrill_settings/merchant_id', $order->getStoreId()).$response['transaction_id'].strtoupper(Mage::getStoreConfig('payment/skrill_settings/secret_word', $order->getStoreId())).$response['mb_amount'].$response['mb_currency'].$response['status'];
 
         return strtoupper(md5($string));
     }

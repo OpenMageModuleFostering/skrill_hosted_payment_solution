@@ -144,7 +144,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
             'merchant_account'  => Mage::getStoreConfig('payment/skrill_settings/merchant_account', $this->getOrder()->getStoreId()),
             'recipient_desc'    => Mage::getStoreConfig('payment/skrill_settings/recipient_desc', $this->getOrder()->getStoreId()),
             'logo_url'          => urlencode(Mage::getStoreConfig('payment/skrill_settings/logo_url', $this->getOrder()->getStoreId())),
-            'api_passwd'        => md5(Mage::getStoreConfig('payment/skrill_settings/api_passwd', $this->getOrder()->getStoreId()))
+            'api_passwd'        => Mage::getStoreConfig('payment/skrill_settings/api_passwd', $this->getOrder()->getStoreId())
         );
 
         return $settings;
@@ -207,7 +207,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
 
     public function getSid($fields)
     {
-        $url = 'https://www.moneybookers.com/app/payment.pl';
+        $url = 'https://pay.skrill.com/app';
 
         foreach($fields as $key=>$value) { 
             $fields_string .= $key.'='.$value.'&'; 
@@ -281,8 +281,8 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         $postParameters['recipient_description'] = $settings['recipient_desc'];
         $postParameters['transaction_id'] = Mage::getModel("sales/order")->getCollection()->getLastItem()->getIncrementId().Mage::helper('skrill')->getDateTime().Mage::helper('skrill')->randomNumber(4);
         $postParameters['return_url'] = Mage::getUrl('skrill/payment/handleResponse/',array('_secure'=>true));
-        // $postParameters['status_url'] = Mage::getUrl('skrill/payment/handleResponse/',array('_secure'=>true));
-        //$postParameters['status_url2'] = "mailto: erwin@espherestudio.com";
+        // $postParameters['status_url'] = Mage::getUrl('skrill/payment/handleStatus/',array('_secure'=>true));
+        // $postParameters['status_url'] = "mailto: ";
         $postParameters['cancel_url'] = Mage::getUrl('checkout/onepage/',array('_secure'=>true));
         $postParameters['language'] = $lang;
         $postParameters['logo_url'] = $settings['logo_url'];
@@ -309,7 +309,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         if (!$sid)
             Mage::throwException(Mage::helper('skrill')->__('ERROR_GENERAL_REDIRECT'));
 
-        Mage::getSingleton('customer/session')->setRedirectUrl('https://www.moneybookers.com/app/payment.pl?sid='.$sid);
+        Mage::getSingleton('customer/session')->setRedirectUrl('https://pay.skrill.com/app?sid='.$sid);
 
         if ($this->getDisplay() == "IFRAME" )
             return Mage::app()->getStore(Mage::getDesign()->getStore())->getUrl('skrill/payment/qcheckout/', array('_secure'=>true));

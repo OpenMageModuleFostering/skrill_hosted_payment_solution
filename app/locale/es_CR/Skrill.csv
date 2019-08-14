@@ -40,7 +40,7 @@
 "FRONTEND_PM_PAYTRAIL", "Paytrail"
 "FRONTEND_PM_YANDEX", "Yandex"
 
-"SKRILL_BACKEND_GENERAL_SKRILL_PLUGIN_NAME", "Skrill Enterprise Payment Solution"
+"SKRILL_BACKEND_GENERAL_SKRILL_PLUGIN_NAME", "Skrill Hosted Payment Solution"
 "SKRILL_BACKEND_PM_SETTINGS", "Skrill Settings"
 "SKRILL_BACKEND_PM_FLEXIBLE", "All Cards and Alternative Payment Methods"
 "SKRILL_BACKEND_PM_WLT", "Skrill Wallet"

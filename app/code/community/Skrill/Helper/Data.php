@@ -500,7 +500,7 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
         $fields = $params;
         $fields['action'] = $action;
         $fields['email'] = Mage::getStoreConfig('payment/skrill_settings/merchant_account');
-        $fields['password'] = md5(Mage::getStoreConfig('payment/skrill_settings/api_passwd'));
+        $fields['password'] = Mage::getStoreConfig('payment/skrill_settings/api_passwd');
 
         foreach($fields as $key=>$value) { 
             $fields_string .= $key.'='.$value.'&'; 
@@ -614,7 +614,7 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
             $fields = $params;
             $fields['action'] = $action;
             $fields['email'] = Mage::getStoreConfig('payment/skrill_settings/merchant_account');
-            $fields['password'] = md5(Mage::getStoreConfig('payment/skrill_settings/api_passwd'));
+            $fields['password'] = Mage::getStoreConfig('payment/skrill_settings/api_passwd');
         }
         else if ($action == "refund")
         {
