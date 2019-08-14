@@ -298,8 +298,10 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         $postParameters['transaction_id'] = $this->getOrderIncrementId().Mage::helper('skrill')->getDateTime().Mage::helper('skrill')->randomNumber(4);
         $postParameters['return_url'] = Mage::getUrl(
             'skrill/payment/handleResponse/',
-            array('orderId' => $this->getOrderIncrementId(), 'paymentMethod' => $this->getCode(), '_secure' => true)
-        );
+            array('_secure' => true)
+        )
+        ."?orderId=".urlencode($this->getOrderIncrementId())
+        ."&paymentMethod=".$this->getCode();
         if ($this->getStatusUrl()) {
             $postParameters['status_url'] = $this->getStatusUrl();
         }
@@ -318,8 +320,8 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         $postParameters['amount'] = $basket['amount'];
         $postParameters['currency'] = Mage::app()->getStore()->getCurrentCurrencyCode();
         $postParameters['detail1_description'] = "Order pay from ".$contact['email'];
-        $postParameters['merchant_fields'] = 'PlatformID';
-        $postParameters['PlatformID'] = '71422537';
+        $postParameters['merchant_fields'] = 'Platform';
+        $postParameters['Platform'] = '71422537';
 
         if ($this->_code != "skrill_flexible")
             $postParameters['payment_methods'] = $this->getAccountBrand();

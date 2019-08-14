@@ -51,7 +51,7 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
 
     public function handleResponseAction()
     {
-        $orderId = $this->getRequest()->getParam('orderId');
+        $orderId = urldecode($this->getRequest()->getParam('orderId'));
         
         $order = Mage::getSingleton('sales/order');
         $order->loadByIncrementId($orderId);

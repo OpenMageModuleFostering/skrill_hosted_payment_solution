@@ -22,7 +22,7 @@
 <config>
     <modules>
         <Skrill>
-            <version>1.0.18</version>
+            <version>1.0.21</version>
         </Skrill>
     </modules>
 
@@ -170,7 +170,7 @@
     <default>
         <payment>           
             <skrill_settings>
-                <version>1.0.18</version>
+                <version>1.0.21</version>
                 <merchant_id></merchant_id>
                 <merchant_account></merchant_account>
                 <recipient_desc></recipient_desc>

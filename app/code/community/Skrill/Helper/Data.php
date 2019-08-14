@@ -502,10 +502,7 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
         $fields['email'] = Mage::getStoreConfig('payment/skrill_settings/merchant_account');
         $fields['password'] = Mage::getStoreConfig('payment/skrill_settings/api_passwd');
 
-        foreach($fields as $key=>$value) { 
-            $fields_string .= $key.'='.$value.'&'; 
-        }
-        $fields_string = rtrim($fields_string, '&');
+        $fields_string = http_build_query($fields);
 
         $curl = curl_init();
 
@@ -556,12 +553,17 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
         $response_array = array();
         $string = explode("\n",$strings);
         $response_array['response_header'] = $string[0];
+        if(!empty($string[1])) {
         $string_arr = explode("&",$string[1]);
-        foreach ($string_arr as $key => $value) {
+            foreach ($string_arr as $key => $value) {
             $value_arr = explode("=",$value);
             $response_array[urldecode($value_arr[0])] = urldecode($value_arr[1]);
+            }
+            return $response_array; 
         }
-        return $response_array;        
+        else {
+            return false;
+        }       
     }
 
     public function getTrnStatus($code)
@@ -603,9 +605,9 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
             $separator = ". ";        
 
         $comment = Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_STATUS')." : ".Mage::helper('skrill')->getTrnStatus($response['status']).$separator;
-        if ($response['payment_type'])
+        if (isset($response['payment_type']))
             $comment .= Mage::helper('skrill')->__('SKRILL_BACKEND_ORDER_PM')." : ".Mage::helper('skrill')->__('SKRILL_FRONTEND_PM_'.$response['payment_type']).$separator;
-        if ($response['payment_instrument_country'])
+        if (isset($response['payment_instrument_country']))
         {
             $country_iso2 = Mage::helper('skrill')->getCountryIso2($response['payment_instrument_country']);
             if ($country_iso2)
