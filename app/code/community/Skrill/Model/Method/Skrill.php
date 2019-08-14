@@ -130,8 +130,8 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         if ($paymentInfo instanceof Mage_Sales_Model_Order_Payment) {
             return $paymentInfo->getOrder();
         }
-
-        return $paymentInfo->getQuote();
+        $quote = Mage::getModel('sales/quote')->load($paymentInfo->getQuote()->getId());
+        return $quote;
     }
 
     public function getOrderIncrementId()
@@ -157,7 +157,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
             'merchant_id'       => Mage::getStoreConfig('payment/skrill_settings/merchant_id', $this->getOrder()->getStoreId()),
             'merchant_account'  => Mage::getStoreConfig('payment/skrill_settings/merchant_account', $this->getOrder()->getStoreId()),
             'recipient_desc'    => Mage::getStoreConfig('payment/skrill_settings/recipient_desc', $this->getOrder()->getStoreId()),
-            'logo_url'          => urlencode(Mage::getStoreConfig('payment/skrill_settings/logo_url', $this->getOrder()->getStoreId())),
+            'logo_url'          => Mage::getStoreConfig('payment/skrill_settings/logo_url', $this->getOrder()->getStoreId()),
             'api_passwd'        => md5(Mage::helper('core')->decrypt($apiPassword)),
             'secret_word'       => md5(Mage::helper('core')->decrypt($secretWord)),
             'merchant_email'    => Mage::getStoreConfig('payment/skrill_settings/merchant_email', $this->getOrder()->getStoreId())
@@ -283,10 +283,12 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         $postParameters['transaction_id'] = $this->getOrderIncrementId().Mage::helper('skrill')->getDateTime().Mage::helper('skrill')->randomNumber(4);
         $postParameters['return_url'] = Mage::getUrl(
             'skrill/payment/handleResponse/',
-            array('_secure' => true)
-        )
-        ."?orderId=".urlencode($this->getOrderIncrementId())
-        ."&paymentMethod=".$this->getCode();
+            array(
+                'orderId' => $this->getOrderIncrementId(),
+                'paymentMethod' => $this->getCode(),
+                '_secure' => true
+            )
+        );
         $postParameters['status_url'] = $this->getStatusUrl();
         if (isset($settings['merchant_email'])) {
             $postParameters['status_url2'] = $settings['merchant_email'];

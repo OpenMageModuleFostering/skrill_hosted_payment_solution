@@ -246,14 +246,4 @@ class Skrill_ResponseController extends Mage_Core_Controller_Front_Action
         $this->renderLayout();
     }
 
-    public function myurlencode($val)
-    {
-        return urlencode(str_replace("/", "%2f", $val));
-    }
-
-    public function myurldecode($val)
-    {
-        return str_replace("%2f", "/", urldecode($val));
-    }
-
 }

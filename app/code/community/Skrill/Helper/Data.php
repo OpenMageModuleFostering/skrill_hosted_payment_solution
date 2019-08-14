@@ -1411,26 +1411,4 @@ class Skrill_Helper_Data extends Mage_Core_Helper_Abstract
         return $result;
     }
 
-    public function getMerchantData($storeId)
-    {
-        $versionData['transaction_mode'] = 'LIVE';
-        $versionData['ip_address'] = Mage::helper('core/http')->getServerAddr();
-        $versionData['shop_version'] = Mage::getVersion();
-        $versionData['plugin_version'] = Mage::getStoreConfig('payment/skrill_settings/version', $storeId);
-        $versionData['client'] = 'Skrill';
-        $versionData['merchant_id'] = Mage::getStoreConfig('payment/skrill_settings/merchant_id', $storeId);
-        $versionData['shop_system'] = 'Magento';
-        $versionData['shop_url'] = Mage::getStoreConfig('payment/skrill_settings/shop_url', $storeId);
-
-        if (Mage::getStoreConfig('payment/skrill_settings/merchant_account', $storeId)) {
-            $versionData['email'] = Mage::getStoreConfig('payment/skrill_settings/merchant_account', $storeId);
-        } else {
-            $collection = Mage::getModel('admin/user')->getCollection()->setPageSize(1)->getData();
-            $versionData['email'] = $collection[0]['email'];
-        }
-
-        return $versionData;
-    }
-
 }
-

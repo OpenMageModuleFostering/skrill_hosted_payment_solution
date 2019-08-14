@@ -36,7 +36,7 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
 
     public function handleResponseAction()
     {
-        $orderId = urldecode($this->getRequest()->getParam('orderId'));
+        $orderId = $this->getRequest()->getParam('orderId');
 
         $order = Mage::getSingleton('sales/order');
         $order->loadByIncrementId($orderId);
@@ -136,9 +136,6 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
         if ($responseStatus['payment_type'] == 'NGP') {
             $responseStatus['payment_type'] = 'OBT';
         }
-
-        $versionData = Mage::helper('skrill')->getMerchantData($order->getStoreId());
-        Mage::helper('skrill/versionTracker')->sendVersionTracker($versionData);
 
         $this->saveAdditionalInformation($order, $responseStatus);
 
