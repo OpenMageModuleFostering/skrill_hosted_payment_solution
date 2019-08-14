@@ -39,7 +39,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -53,6 +53,7 @@
                             <frontend_type>text</frontend_type>
                             <config_path>payment/skrill_settings/merchant_id</config_path>
                             <sort_order>2</sort_order>
+                            <validate>required-entry</validate>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -61,9 +62,9 @@
                             <label>SKRILL_BACKEND_MERCHANT</label>
                             <comment>SKRILL_BACKEND_TT_MEMAIL</comment>
                             <frontend_type>text</frontend_type>
-                            <validate>validate-email</validate>                            
                             <config_path>payment/skrill_settings/merchant_account</config_path>
                             <sort_order>3</sort_order>
+                            <validate>required-entry</validate>                            
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -88,12 +89,22 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </logo_url>
+                        <shop_url translate="label,comment">
+                            <label>SKRILL_BACKEND_SHOPURL</label>                          
+                            <frontend_type>text</frontend_type>
+                            <config_path>payment/skrill_settings/shop_url</config_path>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </shop_url>
                         <api_passwd translate="label,comment">
                             <label>SKRILL_BACKEND_APIPASS</label>
                             <comment>SKRILL_BACKEND_TT_APIPW</comment>                            
                             <frontend_type>password</frontend_type>
                             <config_path>payment/skrill_settings/api_passwd</config_path>
-                            <sort_order>6</sort_order>
+                            <sort_order>7</sort_order>
+                            <validate>required-entry</validate>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -103,7 +114,8 @@
                             <comment>SKRILL_BACKEND_TT_SECRET</comment>                            
                             <frontend_type>password</frontend_type>
                             <config_path>payment/skrill_settings/secret_word</config_path>
-                            <sort_order>7</sort_order>
+                            <sort_order>8</sort_order>
+                            <validate>required-entry</validate>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -113,7 +125,7 @@
                             <comment>SKRILL_BACKEND_TT_DISPLAY</comment>                            
                             <frontend_type>select</frontend_type>
                             <config_path>payment/skrill_settings/display</config_path>
-                            <sort_order>8</sort_order>
+                            <sort_order>9</sort_order>
                             <source_model>skrill/source_display</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -129,7 +141,7 @@
                     <sort_order>99</sort_order>
                     <fields>
                         <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -186,7 +198,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -225,7 +237,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -274,7 +286,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -401,7 +413,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -537,7 +549,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -586,7 +598,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -635,7 +647,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -684,7 +696,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -733,7 +745,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -782,7 +794,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -831,7 +843,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -880,7 +892,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -929,7 +941,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -978,7 +990,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1027,7 +1039,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1076,7 +1088,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1125,7 +1137,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1251,7 +1263,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1377,7 +1389,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1493,56 +1505,7 @@
                             <show_in_store>1</show_in_store>
                         </sort_order>
                     </fields>
-                </skrill_sft>                       
-                <skrill_ent translate="label">
-                    <label>SKRILL_BACKEND_PM_ENT</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>120</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>1</show_in_store>
-                    <fields>
-                        <!-- <version>
-                            <label>v1.0.6</label>
-                            <sort_order>1</sort_order>
-                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
-                            <frontend_type>label</frontend_type>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </version> -->
-                        <active translate="label">
-                            <label>BACKEND_CH_ACTIVE</label>
-                            <comment>Singapore</comment>
-                            <sort_order>2</sort_order>
-                            <frontend_type>select</frontend_type>
-                            <config_path>payment/skrill_ent/active</config_path>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </active>
-                        <show_separately translate="label">
-                            <label>SKRILL_BACKEND_PM_MODE</label>
-                            <sort_order>3</sort_order>
-                            <frontend_type>select</frontend_type>
-                            <config_path>payment/skrill_ent/show_separately</config_path>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </show_separately>
-                        <sort_order translate="label">
-                            <label>BACKEND_CH_ORDER</label>
-                            <frontend_type>text</frontend_type>
-                            <config_path>payment/skrill_ent/sort_order</config_path>
-                            <sort_order>6</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </sort_order>
-                    </fields>
-                </skrill_ent>                       
+                </skrill_sft>                                             
                 <skrill_ebt translate="label">
                     <label>SKRILL_BACKEND_PM_EBT</label>
                     <frontend_type>text</frontend_type>
@@ -1552,7 +1515,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1601,7 +1564,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1727,7 +1690,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1853,7 +1816,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1902,7 +1865,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -1951,7 +1914,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -2000,7 +1963,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
                         <!-- <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -2039,7 +2002,56 @@
                             <show_in_store>1</show_in_store>
                         </sort_order>
                     </fields>
-                </skrill_glu>                                                             
+                </skrill_glu>
+                <skrill_ali translate="label">
+                    <label>SKRILL_BACKEND_PM_ALI</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>127</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <!-- <version>
+                            <label>v1.0.7</label>
+                            <sort_order>1</sort_order>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <frontend_type>label</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </version> -->
+                        <active translate="label">
+                            <label>BACKEND_CH_ACTIVE</label>
+                            <comment>Consumer location: China only. Merchant location: This is available for merchants in all countries except China.</comment>
+                            <sort_order>2</sort_order>
+                            <frontend_type>select</frontend_type>
+                            <config_path>payment/skrill_ali/active</config_path>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <show_separately translate="label">
+                            <label>SKRILL_BACKEND_PM_MODE</label>
+                            <sort_order>3</sort_order>
+                            <frontend_type>select</frontend_type>
+                            <config_path>payment/skrill_ali/show_separately</config_path>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </show_separately>
+                        <sort_order translate="label">
+                            <label>BACKEND_CH_ORDER</label>
+                            <frontend_type>text</frontend_type>
+                            <config_path>payment/skrill_ali/sort_order</config_path>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sort_order>
+                    </fields>
+                </skrill_ali>                                                             
 
                 <!-- <skrill_paypal module="skrill" translate="label">
                     <label>SKRILL_BACKEND_PM_PAYPAL</label>
@@ -2049,7 +2061,7 @@
                     <sort_order>1600</sort_order>
                     <fields>
                         <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -2163,7 +2175,7 @@
                     <sort_order>1800</sort_order>
                     <fields>
                         <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -2277,7 +2289,7 @@
                     <sort_order>1900</sort_order>
                     <fields>
                         <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -2391,7 +2403,7 @@
                     <sort_order>2000</sort_order>
                     <fields>
                         <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>
@@ -2504,7 +2516,7 @@
                     <sort_order>2100</sort_order>
                     <fields>
                         <version>
-                            <label>v1.0.6</label>
+                            <label>v1.0.7</label>
                             <sort_order>1</sort_order>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <frontend_type>label</frontend_type>

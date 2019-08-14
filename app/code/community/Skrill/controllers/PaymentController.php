@@ -116,6 +116,9 @@ class Skrill_PaymentController extends Mage_Core_Controller_Front_Action
                 $response = Mage::helper('skrill')->getResponseArray($result);
                 $is_fraud = false;
 
+                $versionData = Mage::helper('skrill')->getMerchantData($order->getStoreId());
+                Mage::helper('skrill/versionTracker')->sendVersionTracker($versionData);
+
                 $order->getPayment()->setAdditionalInformation('skrill_transaction_id', $response['transaction_id']);
                 $order->getPayment()->setAdditionalInformation('skrill_mb_transaction_id', $response['mb_transaction_id']);
                 $order->getPayment()->setAdditionalInformation('skrill_ip_country', $response['ip_country']);

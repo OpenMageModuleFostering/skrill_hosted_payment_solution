@@ -66,13 +66,13 @@
     var secretwordold = document.getElementById("skrill_skrill_settings_secret_word").value;
     configForm.validator.options.onFormValidate = function(result, form) {
         var apipasswd = document.getElementById("skrill_skrill_settings_api_passwd").value;
-        if (apipasswd != apipasswdold)
+        if (apipasswd != '' && apipasswd != null && apipasswd != apipasswdold)
         {
             var hashapi = CryptoJS.MD5(apipasswd);
             document.getElementById("skrill_skrill_settings_api_passwd").value = hashapi;
         }
         var secretword = document.getElementById("skrill_skrill_settings_secret_word").value;
-        if (secretword != secretwordold)
+        if (secretword != '' && secretword != null && secretword != secretwordold)
         {
             var hashsecret = CryptoJS.MD5(secretword);
             document.getElementById("skrill_skrill_settings_secret_word").value = hashsecret;

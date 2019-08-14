@@ -141,10 +141,12 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
     public function getSkrillSettings()
     {
         $settings = array(
+            'merchant_id'  => Mage::getStoreConfig('payment/skrill_settings/merchant_id', $this->getOrder()->getStoreId()),
             'merchant_account'  => Mage::getStoreConfig('payment/skrill_settings/merchant_account', $this->getOrder()->getStoreId()),
             'recipient_desc'    => Mage::getStoreConfig('payment/skrill_settings/recipient_desc', $this->getOrder()->getStoreId()),
             'logo_url'          => urlencode(Mage::getStoreConfig('payment/skrill_settings/logo_url', $this->getOrder()->getStoreId())),
-            'api_passwd'        => Mage::getStoreConfig('payment/skrill_settings/api_passwd', $this->getOrder()->getStoreId())
+            'api_passwd'        => Mage::getStoreConfig('payment/skrill_settings/api_passwd', $this->getOrder()->getStoreId()),
+            'secret_word'        => Mage::getStoreConfig('payment/skrill_settings/secret_word', $this->getOrder()->getStoreId())
         );
 
         return $settings;
@@ -207,7 +209,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
 
     public function getSid($fields)
     {
-        $url = 'https://pay.skrill.com/app';
+        $url = 'https://pay.skrill.com';
 
         foreach($fields as $key=>$value) { 
             $fields_string .= $key.'='.$value.'&'; 
@@ -241,7 +243,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
 
     public function getPaymentMethods()
     {
-        $payment_methods = "WLT,PSC,ACC,VSA,MSC,VSD,VSE,MAE,AMX,DIN,JCB,GCB,DNK,PSP,CSI,OBT,GIR,DID,SFT,ENT,EBT,IDL,NPY,PLI,PWY,EPY,GLU";
+        $payment_methods = "WLT,PSC,ACC,VSA,MSC,VSD,VSE,MAE,AMX,DIN,JCB,GCB,DNK,PSP,CSI,OBT,GIR,DID,SFT,EBT,IDL,NPY,PLI,PWY,EPY,GLU,ALI";
         $pm_list = explode(",", $payment_methods);
         //$list = $this->getAccountBrand().',';
         $list = '';
@@ -267,15 +269,9 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         $contact = Mage::helper('skrill')->getContactData($this->getOrder());
         $basket = Mage::helper('skrill')->getBasketData($this->getOrder());
         $settings = $this->getSkrillSettings();
-        $langs = Mage::helper('skrill')->getLocaleIsoCode(); 
-        switch ($langs) {
-            case 'de':
-              $lang = 'DE';
-              break;
 
-            default:
-              $lang='EN';
-        }
+        if (empty($settings['merchant_id']) || empty($settings['merchant_account']) || empty($settings['api_passwd']) || empty($settings['secret_word']))
+            Mage::throwException(Mage::helper('skrill')->__('ERROR_GENERAL_REDIRECT'));
 
         $postParameters['pay_to_email'] = $settings['merchant_account'];
         $postParameters['recipient_description'] = $settings['recipient_desc'];
@@ -284,7 +280,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         // $postParameters['status_url'] = Mage::getUrl('skrill/payment/handleStatus/',array('_secure'=>true));
         // $postParameters['status_url'] = "mailto: ";
         $postParameters['cancel_url'] = Mage::getUrl('checkout/onepage/',array('_secure'=>true));
-        $postParameters['language'] = $lang;
+        $postParameters['language'] = $this->getLanguage();
         $postParameters['logo_url'] = $settings['logo_url'];
         $postParameters['prepare_only'] = 1;
         $postParameters['pay_from_email'] = $contact['email'];
@@ -297,6 +293,7 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         $postParameters['amount'] = $basket['amount'];
         $postParameters['currency'] = Mage::app()->getStore()->getCurrentCurrencyCode();
         $postParameters['detail1_description'] = "Order pay from ".$contact['email'];
+        $postParameters['Platform ID'] = '71422537';
         if ($this->_code != "skrill_flexible")
             $postParameters['payment_methods'] = $this->getAccountBrand();
 
@@ -309,13 +306,28 @@ abstract class Skrill_Model_Method_Skrill extends Mage_Payment_Model_Method_Abst
         if (!$sid)
             Mage::throwException(Mage::helper('skrill')->__('ERROR_GENERAL_REDIRECT'));
 
-        Mage::getSingleton('customer/session')->setRedirectUrl('https://pay.skrill.com/app?sid='.$sid);
+        Mage::getSingleton('customer/session')->setRedirectUrl('https://pay.skrill.com/?sid='.$sid);
 
         if ($this->getDisplay() == "IFRAME" )
             return Mage::app()->getStore(Mage::getDesign()->getStore())->getUrl('skrill/payment/qcheckout/', array('_secure'=>true));
         else
             return Mage::getSingleton('customer/session')->getRedirectUrl();
 
+    }
+
+    public function getLanguage(){
+
+        $langs = Mage::helper('skrill')->getLocaleIsoCode(); 
+        switch ($langs) {
+            case 'de':
+              $lang = 'DE';
+              break;
+
+            default:
+              $lang='EN';
+        }
+
+        return $lang;   
     }
     
     public function capture(Varien_Object $payment, $amount)

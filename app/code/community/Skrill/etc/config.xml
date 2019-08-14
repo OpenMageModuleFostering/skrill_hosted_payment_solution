@@ -22,7 +22,7 @@
 <config>
     <modules>
         <Skrill>
-            <version>1.0.6</version>
+            <version>1.0.7</version>
         </Skrill>
     </modules>
 
@@ -170,10 +170,12 @@
     <default>
         <payment>           
             <skrill_settings>
+                <version>1.0.7</version>
                 <merchant_id></merchant_id>
                 <merchant_account></merchant_account>
                 <recipient_desc></recipient_desc>
                 <logo_url></logo_url>
+                <shop_url></shop_url>
                 <api_passwd></api_passwd>
                 <secret_word></secret_word>
                 <display>IFRAME</display>
@@ -418,17 +420,6 @@
                 <specificcountry>DE,AT,BE,NL,IT,FR,PL,GB</specificcountry>
                 <group>skrillpm</group>
             </skrill_sft>
-            <skrill_ent>
-                <active>0</active>
-                <show_separately>0</show_separately>
-                <model>skrill/method_ent</model>
-                <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
-                <title>eNETS</title>
-                <allowspecific>1</allowspecific>
-                <specificcountry>SG</specificcountry>
-                <group>skrillpm</group>
-            </skrill_ent>
             <skrill_ebt>
                 <active>0</active>
                 <show_separately>0</show_separately>
@@ -501,7 +492,7 @@
                 <show_separately>0</show_separately>
                 <model>skrill/method_epy</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>                              
+                <payment_action>authorize</payment_action>                         
                 <title>ePay.bg</title>
                 <allowspecific>1</allowspecific>
                 <specificcountry>BG</specificcountry>
@@ -518,6 +509,17 @@
                 <specificcountry>SE,FI,EE,DK,ES,PL,IT,FR,DE,PT,AT,LV,LT,NL</specificcountry>
                 <group>skrillpm</group>
             </skrill_glu>
+            <skrill_ali>
+                <active>0</active>
+                <show_separately>0</show_separately>
+                <model>skrill/method_ali</model>
+                <order_status>pending_payment</order_status>
+                <payment_action>authorize</payment_action>                              
+                <title>Alipay</title>
+                <allowspecific>1</allowspecific>
+                <specificcountry>CN</specificcountry>
+                <group>skrillpm</group>
+            </skrill_ali>
             <skrill_creditcard>
                 <active>1</active>
                 <model>skrill/method_creditcard</model>
