@@ -1,3 +1,5 @@
+
+
 ## Original Package Description
 
 Skrill’s Hosted Solution accepts payments via cards, over 20 local payment methods and more than 80 banks. Together with Magento, Skrill offer a fully integrated payment solution which can begin accepting payments within hours.
